@@ -13,3 +13,27 @@ wheels/
 常见方法/
 简历/
 优秀论文方法借鉴/
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# Draft LaTeX files
+latex/*
+
+# Experimental attempts (not for submission)
+attempt/
+
+*.png
