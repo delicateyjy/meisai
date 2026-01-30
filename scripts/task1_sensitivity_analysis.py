@@ -366,15 +366,15 @@ def main():
 
     # 保存结果
     all_results = pd.concat(results.values(), ignore_index=True)
-    all_results.to_csv(os.path.join(script_dir, 'sensitivity_analysis.csv'),
+    all_results.to_csv(os.path.join(script_dir, 'task1_sensitivity_analysis.csv'),
                        index=False, encoding='utf-8-sig')
 
-    stability.to_csv(os.path.join(script_dir, 'stability_summary.csv'),
+    stability.to_csv(os.path.join(script_dir, 'task1_stability_summary.csv'),
                      index=False, encoding='utf-8-sig')
 
     # 可视化
-    plot_sensitivity(results, os.path.join(script_dir, 'sensitivity_curves.png'))
-    plot_stability_summary(stability, os.path.join(script_dir, 'stability_summary.png'))
+    plot_sensitivity(results, os.path.join(script_dir, 'task1_sensitivity_curves.png'))
+    plot_stability_summary(stability, os.path.join(script_dir, 'task1_stability_summary.png'))
 
     print(f"\n结果已保存到 {script_dir}")
 

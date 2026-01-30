@@ -631,6 +631,132 @@ def compute_metrics(results: List[EstimationResult]) -> Dict:
     }
 
 
+def generate_consistency_metrics(vote_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    从投票估计结果生成一致性指标（Q1a）
+    每周一条记录
+    """
+    from scipy import stats as sp_stats
+
+    def get_scoring_method(season: int) -> str:
+        if season <= 2 or season >= 28:
+            return 'rank'
+        return 'percent'
+
+    def compute_combined(vote_shares, judge_scores, method):
+        if method == 'rank':
+            judge_ranks = sp_stats.rankdata(-judge_scores, method='average')
+            vote_ranks = sp_stats.rankdata(-vote_shares, method='average')
+            return -(judge_ranks + vote_ranks)
+        else:
+            judge_pct = judge_scores / (judge_scores.sum() + 1e-10)
+            vote_pct = vote_shares / (vote_shares.sum() + 1e-10)
+            return judge_pct + vote_pct
+
+    records = []
+    for (season, week), group in vote_df.groupby(['season', 'week']):
+        n = len(group)
+        if n < 2:
+            continue
+
+        names = group['contestant'].values
+        judge_scores = group['judge_score'].values
+        vote_means = group['vote_share_mean'].values
+        is_eliminated = group['is_eliminated'].values
+
+        eliminated_mask = is_eliminated == True
+        if not eliminated_mask.any():
+            continue
+        eliminated_idx = np.where(eliminated_mask)[0][0]
+
+        method = get_scoring_method(season)
+        combined = compute_combined(vote_means, judge_scores, method)
+
+        predicted_idx = np.argmin(combined)
+        is_correct = (predicted_idx == eliminated_idx)
+
+        bottom2_idx = np.argsort(combined)[:2]
+        is_top2 = eliminated_idx in bottom2_idx
+
+        tau = 12.0
+        elim_scores = -combined
+        elim_scores = elim_scores - np.max(elim_scores)
+        probs = np.exp(tau * elim_scores) / np.sum(np.exp(tau * elim_scores))
+        elimination_prob = probs[eliminated_idx]
+
+        combined_sorted = np.sort(combined)
+        margin = combined_sorted[1] - combined_sorted[0] if n > 1 else 0
+
+        predicted_ranks = sp_stats.rankdata(-combined)
+        actual_ranks = np.ones(n)
+        actual_ranks[eliminated_idx] = n
+        other_mask = np.arange(n) != eliminated_idx
+        if np.sum(other_mask) > 0:
+            actual_ranks[other_mask] = sp_stats.rankdata(-judge_scores[other_mask])
+
+        tau_corr, _ = sp_stats.kendalltau(predicted_ranks, actual_ranks)
+        if np.isnan(tau_corr):
+            tau_corr = 0
+
+        records.append({
+            'season': season,
+            'week': week,
+            'n_contestants': n,
+            'scoring_method': method,
+            'eliminated_name': names[eliminated_idx],
+            'is_correct': is_correct,
+            'elimination_probability': elimination_prob,
+            'is_top2': is_top2,
+            'margin': margin,
+            'kendall_tau': tau_corr
+        })
+
+    return pd.DataFrame(records)
+
+
+def generate_certainty_metrics(vote_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    从投票估计结果生成确定性指标（Q1b）
+    每个选手每周一条记录
+    """
+    from scipy import stats as sp_stats
+
+    records = []
+    for _, row in vote_df.iterrows():
+        mean = row['vote_share_mean']
+        std = row['vote_share_std']
+        ci_lower = row['ci_lower']
+        ci_upper = row['ci_upper']
+
+        cv = std / (mean + 1e-10)
+        ci_width = ci_upper - ci_lower
+        relative_uncertainty = ci_width / (mean + 1e-10)
+
+        season_week_df = vote_df[(vote_df['season'] == row['season']) &
+                                  (vote_df['week'] == row['week'])]
+        judge_percentile = sp_stats.percentileofscore(
+            season_week_df['judge_score'], row['judge_score'], kind='rank'
+        )
+
+        records.append({
+            'season': row['season'],
+            'week': row['week'],
+            'contestant': row['contestant'],
+            'is_eliminated': row['is_eliminated'],
+            'judge_score': row['judge_score'],
+            'judge_percentile': judge_percentile,
+            'vote_share_mean': mean,
+            'vote_share_std': std,
+            'cv': cv,
+            'ci_lower': ci_lower,
+            'ci_upper': ci_upper,
+            'ci_width': ci_width,
+            'relative_uncertainty': relative_uncertainty
+        })
+
+    return pd.DataFrame(records)
+
+
 def main():
     import os
     import argparse
@@ -692,7 +818,7 @@ def main():
     print(f"被淘汰选手CV: {metrics['cv_eliminated']:.4f}")
     print(f"未淘汰选手CV: {metrics['cv_not_eliminated']:.4f}")
 
-    # 保存结果
+    # 生成投票估计结果DataFrame
     records = []
     for r in results:
         for i, name in enumerate(r.names):
@@ -708,10 +834,29 @@ def main():
                 'is_eliminated': i == r.eliminated_idx
             })
 
-    df = pd.DataFrame(records)
-    output_path = os.path.join(script_dir, 'vote_estimates_v3.csv')
-    df.to_csv(output_path, index=False, encoding='utf-8-sig')
-    print(f"\n结果已保存: {output_path}")
+    vote_df = pd.DataFrame(records)
+
+    # 生成一致性和确定性指标
+    print("\n" + "="*60)
+    print("生成详细指标文件...")
+    print("="*60)
+
+    consistency_df = generate_consistency_metrics(vote_df)
+    certainty_df = generate_certainty_metrics(vote_df)
+
+    # 保存所有结果文件（统一task1_前缀）
+    vote_path = os.path.join(script_dir, 'task1_vote_estimates.csv')
+    consistency_path = os.path.join(script_dir, 'task1_consistency_metrics.csv')
+    certainty_path = os.path.join(script_dir, 'task1_certainty_metrics.csv')
+
+    vote_df.to_csv(vote_path, index=False, encoding='utf-8-sig')
+    consistency_df.to_csv(consistency_path, index=False, encoding='utf-8-sig')
+    certainty_df.to_csv(certainty_path, index=False, encoding='utf-8-sig')
+
+    print(f"投票估计结果: {vote_path}")
+    print(f"一致性指标: {consistency_path}")
+    print(f"确定性指标: {certainty_path}")
+    print(f"\n共保存 {len(vote_df)} 条投票估计, {len(consistency_df)} 周一致性指标, {len(certainty_df)} 条确定性指标")
 
 
 if __name__ == '__main__':
