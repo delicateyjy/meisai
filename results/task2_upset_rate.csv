@@ -1,0 +1,302 @@
+﻿season,week,actual_method,actual_eliminated,judge_lowest,is_upset
+1,1,rank,Trista Sutter,Kelly Monaco,True
+1,2,rank,Trista Sutter,Evander Holyfield,True
+1,3,rank,Evander Holyfield,Evander Holyfield,False
+1,4,rank,Rachel Hunter,Joey McIntyre,True
+2,1,rank,Kenny Mayne,Master P,True
+2,2,rank,Tatum O'Neal,Master P,True
+2,3,rank,Giselle Fernandez,Master P,True
+2,4,rank,Master P,Master P,False
+2,5,rank,Tia Carrere,Tia Carrere,False
+2,6,rank,George Hamilton,George Hamilton,False
+2,7,rank,Lisa Rinna,Jerry Rice,True
+3,1,percent,Tucker Carlson,Tucker Carlson,False
+3,2,percent,Shanna Moakler,Jerry Springer,True
+3,3,percent,Harry Hamlin,Emmitt Smith,True
+3,4,percent,Vivica A. Fox,Sara Evans,True
+3,5,percent,Willa Ford,Sara Evans,True
+3,7,percent,Jerry Springer,Jerry Springer,False
+3,8,percent,Monique Coleman,Monique Coleman,False
+4,1,percent,Paulina Porizkova,Billy Ray Cyrus,True
+4,2,percent,Paulina Porizkova,Clyde Drexler,True
+4,3,percent,Shandi Finnessey,Clyde Drexler,True
+4,4,percent,Leeza Gibbons,Clyde Drexler,True
+4,5,percent,Clyde Drexler,Clyde Drexler,False
+4,6,percent,Heather Mills,John Ratzenberger,True
+4,7,percent,John Ratzenberger,Billy Ray Cyrus,True
+4,8,percent,Billy Ray Cyrus,Billy Ray Cyrus,False
+4,9,percent,Ian Ziering,Ian Ziering,False
+5,1,percent,Josie Maran,Josie Maran,False
+5,2,percent,Albert Reed,Wayne Newton,True
+5,3,percent,Wayne Newton,Wayne Newton,False
+5,4,percent,Floyd Mayweather Jr. ,Mark Cuban,True
+5,5,percent,Mark Cuban,Marie Osmond,True
+5,6,percent,Sabrina Bryan,Jane Seymour,True
+5,7,percent,Jane Seymour,Jane Seymour,False
+5,8,percent,Cameron Mathison,Marie Osmond,True
+5,9,percent,Jennie Garth,Marie Osmond,True
+6,1,percent,Penn Jillette,Monica Seles,True
+6,2,percent,Monica Seles,Monica Seles,False
+6,3,percent,Steve Guttenberg,Marissa Jaret Winokur,True
+6,4,percent,Adam Carolla,Adam Carolla,False
+6,5,percent,Priscilla Presley,Priscilla Presley,False
+6,6,percent,Marlee Matlin,Marlee Matlin,False
+6,7,percent,Shannon Elizabeth,Cristian de la Fuente,True
+6,8,percent,Mario,Marissa Jaret Winokur,True
+6,9,percent,Marissa Jaret Winokur,Marissa Jaret Winokur,False
+7,1,percent,Jeffrey Ross,Jeffrey Ross,False
+7,2,percent,Kim Kardashian,Cloris Leachman,True
+7,3,percent,Cloris Leachman,Cloris Leachman,False
+7,4,percent,Rocco DiSpirito,Rocco DiSpirito,False
+7,5,percent,Toni Braxton,Cloris Leachman,True
+7,6,percent,Cloris Leachman,Cloris Leachman,False
+7,7,percent,Susan Lucci,Warren Sapp,True
+7,8,percent,Maurice Greene,Cody Linley,True
+7,9,percent,Cody Linley,Cody Linley,False
+8,1,percent,Ty Murray,Steve Wozniak,True
+8,2,percent,Belinda Carlisle,Steve-O,True
+8,3,percent,Steve Wozniak,Steve Wozniak,False
+8,4,percent,Steve Wozniak,Steve Wozniak,False
+8,5,percent,David Alan Grier,Steve-O,True
+8,6,percent,Steve-O,Steve-O,False
+8,7,percent,Lawrence Taylor,Lawrence Taylor,False
+8,8,percent,Chuck Wicks,Melissa Rycroft,True
+8,9,percent,Lil' Kim,Ty Murray,True
+8,10,percent,Ty Murray,Ty Murray,False
+9,1,percent,Ashley Hamiliton,Ashley Hamiliton,False
+9,2,percent,Kathy Ireland,Kathy Ireland,False
+9,3,percent,Debi Mazar,Michael Irvin,True
+9,4,percent,Chuck Liddell,Louie Vito,True
+9,5,percent,Natalie Coughlin,Michael Irvin,True
+9,6,percent,Melissa Joan Hart,Michael Irvin,True
+9,7,percent,Mark Dacascos,Mark Dacascos,False
+9,8,percent,Aaron Carter,Aaron Carter,False
+9,9,percent,Joanna Krupa,Donny Osmond,True
+10,1,percent,Buzz Aldrin,Buzz Aldrin,False
+10,2,percent,Buzz Aldrin,Buzz Aldrin,False
+10,3,percent,Buzz Aldrin,Buzz Aldrin,False
+10,4,percent,Aiden Turner,Kate Gosselin,True
+10,5,percent,Kate Gosselin,Kate Gosselin,False
+10,6,percent,Jake Pavelka,Jake Pavelka,False
+10,7,percent,Pamela Anderson,Niecy Nash,True
+10,8,percent,Niecy Nash,Niecy Nash,False
+10,9,percent,Chad Ochocinco,Chad Ochocinco,False
+11,1,percent,David Hasselhoff,David Hasselhoff,False
+11,2,percent,Michael Bolton,Michael Bolton,False
+11,3,percent,Margaret Cho,Margaret Cho,False
+11,4,percent,The Situation,The Situation,False
+11,5,percent,Florence Henderson,Bristol Palin,True
+11,6,percent,Audrina Patridge,Kurt Warner,True
+11,7,percent,Rick Fox,Bristol Palin,True
+11,8,percent,Kurt Warner,Bristol Palin,True
+11,9,percent,Brandy,Bristol Palin,True
+12,1,percent,Mike Catherwood,Mike Catherwood,False
+12,2,percent,Mike Catherwood,Sugar Ray Leonard,True
+12,3,percent,Wendy Williams,Wendy Williams,False
+12,4,percent,Sugar Ray Leonard,Kendra Wilkinson,True
+12,5,percent,Petra Nemcova,Ralph Macchio,True
+12,6,percent,Chris Jericho,Chris Jericho,False
+12,7,percent,Kendra Wilkinson,Kirstie Alley,True
+12,8,percent,Romeo,Ralph Macchio,True
+12,9,percent,Ralph Macchio,Ralph Macchio,False
+13,1,percent,Metta World Peace (Ron),Metta World Peace (Ron),False
+13,2,percent,Elisabetta Canalis,Chaz Bono,True
+13,3,percent,Kristin Cavallari,Chaz Bono,True
+13,4,percent,Chynna Phillips,Carson Kressley,True
+13,5,percent,Carson Kressley,Carson Kressley,False
+13,6,percent,Chaz Bono,Chaz Bono,False
+13,7,percent,David Arquette,Nancy Grace,True
+13,8,percent,Nancy Grace,Nancy Grace,False
+13,9,percent,Hope Solo,Hope Solo,False
+14,1,percent,Martina Navratilova,Melissa Gilbert,True
+14,2,percent,Martina Navratilova,Martina Navratilova,False
+14,3,percent,Jack Wagner,Jack Wagner,False
+14,4,percent,Sherri Sheperd,Gladys Knight,True
+14,5,percent,Gavin DeGraw,Gavin DeGraw,False
+14,6,percent,Gladys Knight,Gladys Knight,False
+14,7,percent,Jaleel White,Melissa Gilbert,True
+14,8,percent,Roshon Fegan,Melissa Gilbert,True
+14,9,percent,Maria Menounos,Katherine Jenkins,True
+15,1,percent,Pamela Anderson,Pamela Anderson,False
+15,2,percent,Joey Fatone,Bristol Palin,True
+15,3,percent,Helio Castroneves,Bristol Palin,True
+15,4,percent,Bristol Palin,Kirstie Alley,True
+15,5,percent,Emmitt Smith,Kelly Monaco,True
+15,6,percent,Sabrina Bryan,Emmitt Smith,True
+15,7,percent,Melissa Rycroft,Kirstie Alley,True
+15,8,percent,Gilles Marini,Kirstie Alley,True
+15,9,percent,Apolo Anton Ohno,Emmitt Smith,True
+16,1,percent,D. L. Hughley,D. L. Hughley,False
+16,2,percent,Wynonna Judd,Dorothy Hamill,True
+16,3,percent,Wynonna Judd,Wynonna Judd,False
+16,4,percent,Lisa Vanderpump,Victor Ortiz,True
+16,5,percent,D. L. Hughley,D. L. Hughley,False
+16,6,percent,Victor Ortiz,Victor Ortiz,False
+16,7,percent,Andy Dick,Andy Dick,False
+16,8,percent,Sean Lowe,Sean Lowe,False
+16,9,percent,Ingo Rademacher,Ingo Rademacher,False
+16,10,percent,Alexandra Raisman,Jacoby Jones,True
+17,1,percent,Bill Nye,Bill Nye,False
+17,2,percent,Keyshawn Johnson,Bill Nye,True
+17,3,percent,Bill Nye,Valerie Harper,True
+17,4,percent,Valerie Harper,Valerie Harper,False
+17,5,percent,Bill Engvall,Leah Remini,True
+17,6,percent,Jack Osbourne,Bill Engvall,True
+17,7,percent,"Nicole ""Snooki"" Polizzi",Bill Engvall,True
+17,8,percent,Brant Daugherty,Bill Engvall,True
+17,9,percent,Elizabeth Berkley Lauren,Bill Engvall,True
+17,10,percent,Leah Remini,Bill Engvall,True
+17,11,percent,Bill Engvall,Bill Engvall,False
+18,1,percent,Billy Dee Williams,Billy Dee Williams,False
+18,2,percent,Billy Dee Williams,Billy Dee Williams,False
+18,3,percent,NeNe Leakes,Drew Carey,True
+18,4,percent,Danica McKellar,Candace Cameron Bure,True
+18,5,percent,Cody Simpson,Drew Carey,True
+18,6,percent,Drew Carey,Candace Cameron Bure,True
+18,7,percent,NeNe Leakes,NeNe Leakes,False
+18,8,percent,Danica McKellar,James Maslow,True
+18,9,percent,Charlie White,Candace Cameron Bure,True
+18,10,percent,James Maslow,Candace Cameron Bure,True
+19,1,percent,Lolo Jones,Betsey Johnson,True
+19,2,percent,Tavis Smiley,Michael Waltrip,True
+19,3,percent,Randy Couture,Randy Couture,False
+19,4,percent,Betsey Johnson,Jonathan Bennett,True
+19,5,percent,Tommy Chong,Michael Waltrip,True
+19,6,percent,Jonathan Bennett,Antonio Sabato Jr.,True
+19,7,percent,Antonio Sabato Jr.,Michael Waltrip,True
+19,8,percent,Michael Waltrip,Michael Waltrip,False
+19,9,percent,Lea Thompson,Tommy Chong,True
+19,10,percent,Tommy Chong,Tommy Chong,False
+19,11,percent,Bethany Mota,Bethany Mota,False
+20,1,percent,Redfoo,Charlotte McKinney,True
+20,2,percent,Chris Soules,Chris Soules,False
+20,3,percent,Charlotte McKinney,Charlotte McKinney,False
+20,4,percent,Michael Sam,Chris Soules,True
+20,5,percent,Suzanne Somers,Robert Herjavec,True
+20,6,percent,Patti LaBelle,Robert Herjavec,True
+20,7,percent,Willow Shields,Robert Herjavec,True
+20,8,percent,Robert Herjavec,Robert Herjavec,False
+20,9,percent,Nastia Liukin,Noah Galloway,True
+21,1,percent,Kim Zolciak-Biermann,Kim Zolciak-Biermann,False
+21,2,percent,Victor Espinoza,Chaka Khan,True
+21,3,percent,Paula Deen,Paula Deen,False
+21,4,percent,Gary Busey,Gary Busey,False
+21,5,percent,Tamar Braxton,Paula Deen,True
+21,6,percent,Paula Deen,Paula Deen,False
+21,7,percent,Hayes Grier,Alek Skarlatos,True
+21,8,percent,Andy Grammer,Andy Grammer,False
+21,9,percent,Alexa PenaVega,Tamar Braxton,True
+21,11,percent,Carlos PenaVega,Alek Skarlatos,True
+22,1,percent,Geraldo Rivera,Geraldo Rivera,False
+22,2,percent,Geraldo Rivera,Geraldo Rivera,False
+22,3,percent,Mischa Barton,Mischa Barton,False
+22,4,percent,Marla Maples,Doug Flutie,True
+22,5,percent,Antonio Brown,Antonio Brown,False
+22,6,percent,Doug Flutie,Doug Flutie,False
+22,7,percent,Kim Fields,Jodie Sweetin,True
+22,8,percent,Jodie Sweetin,Wanya Morris,True
+22,9,percent,Antonio Brown,Antonio Brown,False
+23,1,percent,Rick Perry,Rick Perry,False
+23,2,percent,Rick Perry,Rick Perry,False
+23,3,percent,Rick Perry,Rick Perry,False
+23,4,percent,Babyface,Babyface,False
+23,5,percent,Terra Jole,Maureen McCormick,True
+23,6,percent,Amber Rose,Amber Rose,False
+23,7,percent,Maureen McCormick,Marilu Henner,True
+23,8,percent,Ryan Lochte,Marilu Henner,True
+23,9,percent,Marilu Henner,Marilu Henner,False
+23,10,percent,Terra Jole,Calvin Johnson Jr.,True
+23,11,percent,Jana Kramer,Jana Kramer,False
+24,1,percent,Chris Kattan,Chris Kattan,False
+24,2,percent,Chris Kattan,Mr. T,True
+24,3,percent,Charo,Charo,False
+24,4,percent,Mr. T,Mr. T,False
+24,5,percent,Erika Jayne,David Ross,True
+24,6,percent,Heather Morris,Nick Viall,True
+24,7,percent,Nancy Kerrigan,Bonner Bolton,True
+24,8,percent,Bonner Bolton,Bonner Bolton,False
+24,9,percent,Simone Biles,David Ross,True
+25,1,percent,Drew Scott,Barbara Corcoran,True
+25,2,percent,Barbara Corcoran,Barbara Corcoran,False
+25,3,percent,Nick Lachey,Sasha Pieterse,True
+25,4,percent,Derek Fisher,Nick Lachey,True
+25,5,percent,Sasha Pieterse,Nick Lachey,True
+25,6,percent,Nick Lachey,Nick Lachey,False
+25,7,percent,Nikki Bella,Nikki Bella,False
+25,8,percent,Terrell Owens,Drew Scott,True
+25,9,percent,Victoria Arlen,Drew Scott,True
+25,10,percent,Drew Scott,Drew Scott,False
+26,1,percent,Jamie Anderson,Kareem Abdul-Jabbar,True
+26,2,percent,Kareem Abdul-Jabbar,Kareem Abdul-Jabbar,False
+26,3,percent,Jennie Finch Daigle,Jennie Finch Daigle,False
+27,1,percent,Nikki Glaser,Joe Amabile,True
+27,2,percent,Danelle Umstead,Joe Amabile,True
+27,3,percent,Nancy McKeon,Joe Amabile,True
+27,4,percent,Joe Amabile,Joe Amabile,False
+27,5,percent,Joe Amabile,Joe Amabile,False
+27,6,percent,Mary Lou Retton,John Schneider,True
+27,7,percent,John Schneider,Joe Amabile,True
+27,8,percent,Juan Pablo Di Pace,Bobby Bones,True
+28,1,rank,Sean Spicer,Lamar Odom,True
+28,2,rank,Mary Wilson,Lamar Odom,True
+28,3,rank,Karamo Brown,Lamar Odom,True
+28,4,rank,Lamar Odom,Lamar Odom,False
+28,5,rank,James Van Der Beek,Sean Spicer,True
+28,6,rank,Sailor Brinkley-Cook,Sean Spicer,True
+28,7,rank,Karamo Brown,Sean Spicer,True
+28,8,rank,Kate Flannery,Sean Spicer,True
+28,9,rank,Sean Spicer,Sean Spicer,False
+28,10,rank,James Van Der Beek,James Van Der Beek,False
+29,1,rank,Carole Baskin,Carole Baskin,False
+29,2,rank,Charles Oakley,Skai Jackson,True
+29,3,rank,Carole Baskin,Carole Baskin,False
+29,4,rank,Anne Heche,Anne Heche,False
+29,5,rank,Jesse Metcalfe,Jesse Metcalfe,False
+29,6,rank,Veron Davis,Skai Jackson,True
+29,7,rank,Monica Aldama,Monica Aldama,False
+29,8,rank,Chrishell Stause,Nelly,True
+29,9,rank,AJ McLean,Nelly,True
+29,10,rank,Skai Jackson,Nelly,True
+30,1,rank,Martin Kove,Martin Kove,False
+30,2,rank,Martin Kove,Martin Kove,False
+30,3,rank,Christine Chiu,Cody Rigsby,True
+30,4,rank,Brian Austin Green,Brian Austin Green,False
+30,5,rank,Melanie C,Iman Shumpert,True
+30,6,rank,Kenya Moore,Kenya Moore,False
+30,7,rank,"Mike ""The Miz"" Mizanin","Mike ""The Miz"" Mizanin",False
+30,8,rank,Jimmie Allen,Jimmie Allen,False
+30,9,rank,Melora Hardin,Cody Rigsby,True
+31,1,rank,Jason Lewis,Vinny Guadagnino,True
+31,2,rank,Teresa Giudice,Cheryl Ladd,True
+31,3,rank,Cheryl Ladd,Vinny Guadagnino,True
+31,4,rank,Sam Champion,Sam Champion,False
+31,5,rank,Joseph Baena,Vinny Guadagnino,True
+31,6,rank,Jessie James Decker,Vinny Guadagnino,True
+31,7,rank,Jordin Sparks,Vinny Guadagnino,True
+31,8,rank,Heidi D'Amelio,Vinny Guadagnino,True
+31,9,rank,Trevor Donovan,Trevor Donovan,False
+32,1,rank,Matt Walsh,Matt Walsh,False
+32,2,rank,Jamie Lynn Spears,Mauricio Umansky,True
+32,3,rank,Tyson Beckford,Tyson Beckford,False
+32,4,rank,Adrian Peterson,Barry Williams,True
+32,5,rank,Mira Sorvino,Harry Jowsey,True
+32,6,rank,Mauricio Umansky,Harry Jowsey,True
+32,7,rank,Lele Pons,Harry Jowsey,True
+32,8,rank,Barry Williams,Harry Jowsey,True
+32,9,rank,Harry Jowsey,Harry Jowsey,False
+33,2,rank,Tori Spelling,Eric Roberts,True
+33,3,rank,Eric Roberts,Reginald VelJohnson,True
+33,4,rank,Brooks Nader,Dwight Howard ,True
+33,5,rank,Phaedra Parks,Dwight Howard ,True
+33,6,rank,Jenn Tran,Ilona Maher,True
+33,7,rank,Dwight Howard ,Dwight Howard ,False
+34,1,rank,Andy Richter,Corey Feldman,True
+34,2,rank,Corey Feldman,Corey Feldman,False
+34,3,rank,Lauren Jauregui,Andy Richter,True
+34,4,rank,Hilaria Baldwin,Andy Richter,True
+34,5,rank,Whitney Leavitt,Andy Richter,True
+34,6,rank,Scott Hoying,Andy Richter,True
+34,7,rank,Jen Affleck,Andy Richter,True
+34,8,rank,Danielle Fishel,Andy Richter,True
+34,9,rank,Andy Richter,Andy Richter,False
+34,10,rank,Whitney Leavitt,Dylan Efron,True
