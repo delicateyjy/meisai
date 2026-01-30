@@ -1,0 +1,15 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.claude/
+2026_MCM-ICM_Problems/
+常见方法/
+简历/
+优秀论文方法借鉴/
