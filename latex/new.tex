@@ -1,0 +1,1204 @@
+% ============================================================================
+% MCM 2026 Problem C: Dancing with the Stars 计分系统分析
+% ============================================================================
+%
+% 论文结构概览（共25页，无附录）
+% ----------------------------------------------------------------------------
+%
+% 1. Summary (摘要) - 1页
+%    - 问题概述：DWTS节目的计分系统与观众投票分析
+%    - 核心方法：贝叶斯MCMC投票估计、敏感性分析、混合效应回归
+%    - 主要发现：两种计分方法的差异、争议案例解释、新系统设计
+%
+% 2. Introduction (引言) - 2页
+%    - 背景：Dancing with the Stars 节目机制介绍
+%    - 问题动机：计分公平性、观众参与度、争议案例
+%    - 方法概述
+%
+% 3. Assumptions and Notations (假设与符号) - 1页
+%    - 投票行为假设（理性投票、无大规模刷票）
+%    - 数据完整性假设
+%    - 符号定义表
+%
+% 4. Data Preprocessing (数据预处理) - 1.5页
+%    - 数据结构描述（34季、选手信息、周度分数）
+%    - 缺失值处理策略
+%    - 计分规则变化说明（排名法 vs 百分比法）
+%
+% 5. Task 1: Vote Estimation Model (投票预估模型) - 4页
+%    - 问题定义：从淘汰结果逆向推断投票
+%    - 方法：特征增强自适应贝叶斯投票估计 (FABVE)
+%    - 验证：淘汰预测准确率、不确定性量化
+%
+% 6. Task 2: Scoring Method Comparison (计分方法比较) - 3页
+%    - 排名法 vs 百分比法数学定义
+%    - 指标：翻盘率、隐含权重、Kendall相关
+%    - 结论：哪种方法更偏向评委/观众
+%
+% 7. Task 3: Controversy Analysis (争议案例分析) - 2.5页
+%    - 案例：Jerry Rice, Billy Ray Cyrus, Bristol Palin, Bobby Bones
+%    - 方法：反事实分析
+%    - 结论：计分方法对争议的影响
+%
+% 8. Task 4: Method and Mechanism Discussion (方法与机制讨论) - 2页
+%    - 两种计分方法的优劣对比
+%    - Season 28+ 评委淘汰机制分析
+%    - 综合建议
+%
+% 9. Task 5: Feature Impact Analysis (特征影响分析) - 3页
+%    - 舞伴效应（固定效应模型）
+%    - 选手特征（年龄、职业、地区）
+%    - 方法：混合效应回归 / 随机森林
+%
+% 10. Task 6: New Scoring System Design (新计分系统设计) - 3页
+%     - 设计目标：公平性、参与度、戏剧性、稳定性
+%     - 提议：动态加权混合法 + 进步奖励
+%     - 历史数据回测评估
+%
+% 11. Sensitivity Analysis (敏感性分析) - 1页
+%     - 投票估计的不确定性传播
+%     - 新系统参数敏感性
+%
+% 12. Strengths and Weaknesses (优缺点) - 0.5页
+%
+% 13. Conclusions (结论) - 0.5页
+%
+% 14. Memo to Producers (给制作人的备忘录) - 2页
+%     - 执行摘要
+%     - 关键发现
+%     - 具体建议
+%     - 实施考虑
+%
+% References (参考文献) - 1页
+%
+% 【页数汇总】
+%   摘要1 + 引言2 + 假设1 + 数据1.5 + T1(4) + T2(3) + T3(2.5) + T4(2)
+%   + T5(3) + T6(3) + 敏感性1 + 优缺点0.5 + 结论0.5 + 备忘录2 + 参考1 = 25页
+%
+% ============================================================================
+
+\documentclass[12pt]{article}  % 官方要求字号不小于12号
+
+% === 基础宏包 ===
+\usepackage[table]{xcolor}
+\usepackage[2622678]{easymcm}  % 队伍控制号，需要时修改
+\problem{C}  % 题号
+
+% === 字体设置 ===
+\usepackage{palatino}  % COMAP官方杂志采用的Palatino字体
+
+% === 表格与图片 ===
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{subfigure}
+
+% === 代码展示 ===
+\usepackage{listings}
+
+% === 列表紧凑化 ===
+\usepackage{paralist}
+\let\itemize\compactitem
+\let\enditemize\endcompactitem
+
+% === 其他 ===
+\usepackage{setspace}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
+% === 引用命令 ===
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+
+% === 标题 ===
+\title{Dancing with the Data: A Comprehensive Analysis of Scoring Systems}
+
+% ============================================================================
+% 文档开始
+% ============================================================================
+\begin{document}
+
+% ----------------------------------------------------------------------------
+% 摘要
+% ----------------------------------------------------------------------------
+\begin{abstract}
+
+% TODO: 撰写摘要
+% 结构建议：
+% 1. 问题背景（1-2句）
+% 2. Task 1 投票估计方法与结果
+% 3. Task 2-3 计分方法比较与争议分析
+% 4. Task 4-5 机制讨论与特征影响
+% 5. Task 6 新系统设计
+% 6. 主要结论
+
+\vspace{5pt}
+\textbf{Keywords}: Voting estimation; Scoring system; Bayesian inference; Sensitivity analysis; Mixed-effects model
+
+\end{abstract}
+
+\maketitle  % 生成 Summary Sheet
+\tableofcontents
+\newpage
+
+% ----------------------------------------------------------------------------
+% 第1章：引言
+% ----------------------------------------------------------------------------
+\section{Introduction}
+
+\subsection{Background}
+% TODO: 介绍DWTS节目背景
+% - 节目历史（2005年至今，34季）
+% - 计分机制（评委+观众投票）
+% - 计分规则变化（排名法、百分比法、评委淘汰机制）
+
+\subsection{Problem Restatement}
+% TODO: 问题重述
+% - 6个子任务概述
+% - 核心挑战：投票数据不公开
+
+\subsection{Our Approach}
+% TODO: 方法概述
+% - 整体建模思路
+% - 各任务方法简述
+
+% ----------------------------------------------------------------------------
+% 第2章：假设与符号说明
+% ----------------------------------------------------------------------------
+\section{Assumptions and Notations}
+
+\subsection{Assumptions}
+% ============================================================================
+% 假设清单（共7条）
+% ============================================================================
+%
+% 【假设1】投票行为理性假设
+%   - 观众投票反映其真实偏好，不存在大规模有组织的刷票行为
+%   - 理由：节目有投票验证机制，且历史上未曝出大规模刷票丑闻
+%
+% 【假设2】评委评分独立性假设
+%   - 各评委独立打分，不受其他评委或观众反应影响
+%   - 理由：评委同时亮分，且为专业舞蹈从业者，有独立判断能力
+%
+% 【假设3】淘汰规则严格执行假设
+%   - 每周淘汰结果严格按照公布的计分规则执行（综合得分最低者淘汰）
+%   - 理由：作为公开电视节目，规则透明且受监督
+%
+% 【假设4】投票与评委分数相关性假设
+%   - 观众投票与评委分数存在正相关（技术好的选手倾向于获得更多投票）
+%   - 理由：观众能看到评委打分，会受其影响；同时好的表演也会吸引投票
+%   - 用途：作为贝叶斯先验的基础
+%
+% 【假设5】选手知名度可由职业类别代理假设
+%   - 选手的初始知名度可通过其职业背景（演员、运动员、歌手等）近似估计
+%   - 理由：无法获取每位选手的社交媒体粉丝数等外部数据
+%   - 用途：构建投票先验分布
+%
+% 【假设6】缺失评委分数可插补假设
+%   - 部分周次仅有3位评委（无第4位），可用已有评委平均分代替
+%   - 理由：第4位评委的加入是后期变化，不影响整体评分趋势
+%
+% 【假设7】季节间可比性假设
+%   - 不同季节的评委评分标准大致一致，可以跨季比较
+%   - 理由：核心评委（如Len Goodman）长期稳定，评分尺度相对一致
+%   - 限制：仍需加入季节固定效应控制异质性
+%
+% ============================================================================
+
+\subsection{Notations}
+% ============================================================================
+% 符号表
+% ============================================================================
+%
+% 【基础符号】
+%   n          - 当周参赛选手数量
+%   i          - 选手索引，i = 1, 2, ..., n
+%   t, w       - 周次（week number），t = 1, 2, ..., 11
+%   s          - 季数（season），s = 1, 2, ..., 34
+%
+% 【评委相关】
+%   S_i        - 选手i的评委总分（4位评委分数之和，满分40）
+%   S_{i,j}    - 选手i第j位评委的分数（1-10分）
+%   R_i^S      - 选手i按评委分数的排名（1为最高分）
+%   q_i        - 选手i的评委分数百分比，q_i = S_i / ΣS_j
+%
+% 【投票相关】
+%   V_i        - 选手i的观众投票数（未知，需估计）
+%   R_i^V      - 选手i按观众投票的排名
+%   p_i        - 选手i的投票百分比，p_i = V_i / ΣV_j
+%
+% 【综合得分】
+%   C_i^{rank} - 排名法综合得分：C_i = R_i^S + R_i^V （越小越好）
+%   C_i^{pct}  - 百分比法综合得分：C_i = q_i + p_i （越大越好）
+%
+% 【淘汰相关】
+%   E          - 被淘汰选手的索引
+%   I(·)       - 指示函数
+%
+% 【模型参数（通用）】
+%   α, β, γ    - 回归模型系数
+%   σ²         - 方差参数
+%   θ          - 一般参数向量
+%
+% 【Task 1: 贝叶斯投票估计参数】
+%   π          - 投票份额向量，π_i ∈ [0,1]，Σπ_i = 1
+%   α          - Dirichlet先验强度参数
+%   β          - 先验关联系数（评委分数与投票的相关程度）
+%   θ          - 先验权重向量
+%   f_i^feature- 选手i的特征权重（职业、年龄等）
+%   τ          - softmax温度参数
+%   τ_0        - 基础温度
+%   τ_eff      - 有效温度（动态调整后）
+%   λ          - MCMC提议步长
+%   λ_0        - 初始步长
+%   N          - 后验样本数
+%   B          - 预热（burn-in）迭代数
+%   X          - 选手特征矩阵
+%   a_i        - 选手i的年龄
+%
+% 【验证指标】
+%   EPA        - 淘汰预测准确率 (Elimination Prediction Accuracy)
+%   W          - 分析的总周数
+%   P_elim     - 模型对淘汰结果的置信概率
+%   τ_kendall  - Kendall秩相关系数
+%   CV         - 变异系数 (Coefficient of Variation)
+%
+% ============================================================================
+
+% 符号表格
+Here we clarify some key symbols. Others will be explained in context.
+\vspace{-0.4cm}
+\begin{table}[H]
+\centering
+\caption{Notations}
+\begin{tabular}{cl}
+\toprule[1.5pt]
+\textbf{Symbol} & \textbf{Description} \\
+\midrule
+$S_i$ & Total judges' score for contestant $i$ \\
+$\boldsymbol{\pi}$ & Vote share vector, $\pi_i \in [0,1]$, $\sum_i \pi_i = 1$ \\
+$C_i^{\text{rank}}$ & Combined score under ranking method \\
+$C_i^{\text{pct}}$ & Combined score under percentage method \\
+\bottomrule[1.5pt]
+\end{tabular}
+\end{table}
+\vspace{-0.4cm}
+
+% ----------------------------------------------------------------------------
+% 第3章：数据预处理
+% ----------------------------------------------------------------------------
+\section{Data Preprocessing}
+
+\subsection{Data Overview}
+% ============================================================================
+% 数据概览
+% ============================================================================
+%
+% 【数据来源】
+%   - 官方提供的 2026_MCM_Problem_C_Data.csv
+%   - 涵盖 Dancing with the Stars 第1-34季全部选手数据
+%
+% 【数据规模】
+%   - 总记录数：约400+条（每位参赛选手一条记录）
+%   - 季数跨度：34季（2005-2024年）
+%   - 每季选手数：6-15人不等
+%
+% 【字段说明】
+%
+%   选手信息类：
+%   - celebrity_name          : 明星选手姓名
+%   - celebrity_industry      : 职业背景（Actor/Actress, Athlete, Singer, Model, TV等）
+%   - celebrity_homestate     : 家乡州（美国选手）
+%   - celebrity_homecountry   : 国籍/地区
+%   - celebrity_age_during_season : 参赛时年龄
+%
+%   舞伴信息类：
+%   - ballroom_partner        : 专业舞伴姓名（如Derek Hough, Mark Ballas等）
+%
+%   比赛结果类：
+%   - season                  : 季数（1-34）
+%   - results                 : 结果描述（"1st Place", "Eliminated Week 3"等）
+%   - placement               : 最终排名（数字，1为冠军）
+%
+%   评委分数类：
+%   - week{1-11}_judge{1-4}_score : 第X周第Y位评委的分数
+%   - 分数范围：1-10分（可含0.5分小数）
+%   - 特殊值：0表示该周已被淘汰，N/A表示该评委该周未参与
+%
+% 【基本统计量】（待数据分析后填入）
+%   - 平均参赛周数：约X周
+%   - 平均每周评委总分：约X分
+%   - 职业分布：运动员X%、演员X%、歌手X%...
+%
+% ============================================================================
+
+\subsection{Scoring Rule Evolution}
+\label{sec:scoring-evolution}
+% ============================================================================
+% 计分规则演变（关键！三个阶段）
+% ============================================================================
+%
+% 【阶段1：排名法（Ranking Method）】
+%   适用季数：Season 1-2, Season 28-34
+%
+%   计算方式：
+%     Combined Score = Judge_Rank + Audience_Rank
+%     淘汰规则：综合排名分数最高者淘汰（排名数字越大越差）
+%
+%   特点：
+%     - 评委和观众各占50%权重（均为排名）
+%     - 对极端分数不敏感（只看相对排名）
+%     - 有利于"虽然分数低但粉丝多"的选手
+%
+%   Season 28+ 附加机制：
+%     - 综合排名最后两名进入"底部二人区"
+%     - 由评委投票决定两人中谁被淘汰
+%     - 这给了评委"最终决定权"，可纠正观众投票的"不公"
+%
+% 【阶段2：百分比法（Percentage Method）】
+%   适用季数：Season 3-27
+%
+%   计算方式：
+%     Judge_Pct = S_i / Σ S_j  （评委分数占总分比例）
+%     Vote_Pct  = V_i / Σ V_j  （投票占总投票比例）
+%     Combined Score = Judge_Pct + Vote_Pct
+%     淘汰规则：综合百分比最低者淘汰
+%
+%   特点：
+%     - 评委和观众仍各占约50%（但受分数分布影响）
+%     - 对极端分数敏感（高分选手的评委百分比优势大）
+%     - 技术优秀者更有优势
+%
+% 【规则变化时间线】
+%   Season 1-2   (2005-2006): 排名法
+%   Season 3-27  (2006-2018): 百分比法
+%   Season 28-34 (2019-2024): 排名法 + 评委淘汰机制
+%
+% 【为什么要变化？】
+%   - 百分比法时期出现多次争议（评委最低分选手获胜）
+%   - 如 Bobby Bones (S27冠军) 多次评委垫底但靠粉丝投票晋级
+%   - 制作方希望增加评委话语权，引入评委淘汰机制
+%
+% ============================================================================
+
+\subsection{Data Cleaning}
+% ============================================================================
+% 数据清洗策略
+% ============================================================================
+%
+% 【问题1：缺失的第4位评委分数】
+%   现象：早期季节（约S1-S17）只有3位评委，第4位评委列为N/A
+%   处理：
+%     方案A：仅使用前3位评委分数求和（不推荐，跨季不可比）
+%     方案B：计算平均分后乘以4，统一为40分制（推荐）
+%     方案C：分阶段建模，3评委和4评委季节分开处理
+%
+% 【问题2：淘汰后的0分记录】
+%   现象：选手被淘汰后，后续周次分数全为0
+%   处理：
+%     - 这是正常的"结构性缺失"，不是错误
+%     - 在周度分析中：仅使用该选手被淘汰前的数据
+%     - 在存活分析中：标记淘汰周次作为事件时间
+%
+% 【问题3：特殊值"N/A"】
+%   现象：部分单元格为字符串"N/A"
+%   处理：
+%     - 转换为数值时识别并处理
+%     - 区分"评委缺席的N/A"和"选手淘汰的0"
+%
+% 【问题4：分数格式不一致】
+%   现象：部分分数为小数（如8.5），部分为整数
+%   处理：统一转换为浮点数，保留一位小数
+%
+% 【问题5：选手信息缺失】
+%   现象：部分选手的homestate为空（非美国选手）
+%   处理：
+%     - 创建 is_us 二值变量标识美国选手
+%     - homestate缺失时填充为"Non-US"或单独类别
+%
+% 【问题6：职业类别归并】
+%   现象：celebrity_industry有多种取值，部分类别样本量小
+%   处理：
+%     - 保留主要类别：Actor/Actress, Athlete, Singer, Model, TV Personality
+%     - 小类别合并为"Other"
+%     - 或使用职业大类（Entertainment, Sports, Other）
+%
+% 【数据清洗流程伪代码】
+%   1. 读取CSV，处理编码（UTF-8 BOM）
+%   2. 识别并转换N/A为NaN
+%   3. 转换分数列为数值类型
+%   4. 计算每周评委总分（处理3/4评委差异）
+%   5. 标记有效比赛周（分数>0且非NaN）
+%   6. 创建派生变量（is_us, industry_grouped等）
+%   7. 验证数据完整性（每季应有placement从1到n的完整排名）
+%
+% ============================================================================
+% - 缺失值处理
+% - 异常值检测
+
+% ----------------------------------------------------------------------------
+% 第4章：Task 1 - 投票预估模型
+% ----------------------------------------------------------------------------
+%
+% ============================================================================
+% 模型名称: Feature-Enhanced Adaptive Bayesian Vote Estimation (FABVE)
+%           特征增强自适应贝叶斯投票估计模型
+% ============================================================================
+%
+% 核心挑战：观众投票数据从未公开，只能观察评委分数和淘汰结果
+% 建模思路：贝叶斯推断 + 软约束 + 特征增强先验 + 自适应MCMC
+%
+% ============================================================================
+
+\section{Task 1: Vote Estimation Model}
+
+% ============================================================================
+% 4.1 问题形式化
+% ============================================================================
+
+\subsection{Problem Formulation}
+
+% 在《与星共舞》节目中，每周的淘汰由评委分数和观众投票共同决定。
+In \textit{Dancing with the Stars}, weekly eliminations are determined by a combination
+of judges' scores and audience votes.
+% 然而，在节目34季的历史中，实际的观众投票数据从未被公开披露。
+However, the show has never disclosed the actual
+audience voting data throughout its 34-season history.
+% 这构成了一个经典的逆问题：我们必须从可观测的淘汰结果反推未观测到的投票分布。
+This constitutes a classic
+\textbf{inverse problem}: we must infer the unobserved voting distribution from
+the observable elimination outcomes.
+
+% 形式化地，对于每季s的每周w，我们观察到：
+Formally, for each week $w$ in season $s$, we observe:
+\begin{itemize}
+    % 评委分数向量S，其中每个分数在4到40分之间
+    \item Judges' scores $\mathbf{S} = (S_1, S_2, \ldots, S_n)$, where $S_i \in [4, 40]$
+    % 淘汰结果E，即被淘汰选手的索引
+    \item Elimination result $E \in \{1, 2, \ldots, n\}$ (the index of the eliminated contestant)
+\end{itemize}
+
+% 我们的目标是估计未观测到的投票份额分布π
+Our goal is to estimate the unobserved vote share distribution
+$\boldsymbol{\pi} = (\pi_1, \ldots, \pi_n)$,
+% 其中π_i表示选手i获得的观众投票比例
+where $\pi_i$ represents the fraction
+of audience votes received by contestant $i$, satisfying:
+% 约束条件：所有份额之和为1，且每个份额非负
+\begin{equation}
+\sum_{i=1}^{n} \pi_i = 1, \quad \pi_i \geq 0
+\end{equation}
+
+% 淘汰由节目的计分规则决定：
+The elimination is governed by the show's scoring rules:
+
+% 排名法（第1-2季，第28-34季）：
+\textbf{Ranking Method} (Seasons 1--2, 28--34):
+% 综合排名 = 评委排名 + 投票排名，排名数最高者被淘汰
+\begin{equation}
+C_i^{\text{rank}} = R_i^{S} + R_i^{\pi}, \quad E = \arg\max_i C_i^{\text{rank}}
+\end{equation}
+% 其中R_i^S和R_i^π分别是选手i按评委分数和投票的排名
+where $R_i^{S}$ and $R_i^{\pi}$ are the contestant's ranks by judges' scores and votes respectively.
+
+% 百分比法（第3-27季）：
+\textbf{Percentage Method} (Seasons 3--27):
+% 综合得分 = 评委分数百分比 + 投票百分比，得分最低者被淘汰
+\begin{equation}
+C_i^{\text{pct}} = \frac{S_i}{\sum_j S_j} + \pi_i, \quad E = \arg\min_i C_i^{\text{pct}}
+\end{equation}
+
+% 从数学上看，给定淘汰结果E，存在无穷多个可能产生该结果的投票分布。
+Mathematically, given an elimination outcome $E$, infinitely many vote distributions
+could have produced this result.
+% 我们的任务是通过融入先验知识来识别最合理的分布，同时恰当地量化固有的不确定性。
+Our task is to identify the most plausible distribution
+by incorporating prior knowledge while properly quantifying the inherent uncertainty.
+
+% ============================================================================
+% 4.2 方法论
+% ============================================================================
+
+\subsection{Methodology: Bayesian Vote Estimation}
+
+% 我们采用贝叶斯推断框架来解决这个逆问题。
+We adopt a \textbf{Bayesian inference framework} to address this inverse problem.
+% 该框架提供三个关键优势：
+This framework offers three key advantages:
+\begin{enumerate}
+    % 1. 不确定性量化：提供完整的后验分布而非点估计
+    \item \textbf{Uncertainty quantification}: Provides complete posterior distributions rather than point estimates
+    % 2. 先验知识融合：融入关于投票行为的领域知识
+    \item \textbf{Prior knowledge integration}: Incorporates domain knowledge about voting behavior
+    % 3. 软约束：以概率方式使用淘汰信息，而非硬约束
+    \item \textbf{Soft constraints}: Uses elimination information probabilistically rather than as hard constraints
+\end{enumerate}
+
+% 后验分布由贝叶斯定理给出：
+The posterior distribution is given by Bayes' theorem:
+% 后验 ∝ 似然 × 先验
+\begin{equation}
+P(\boldsymbol{\pi} | E, \mathbf{S}) \propto
+  P(E | \boldsymbol{\pi}, \mathbf{S}) \cdot P(\boldsymbol{\pi} | \mathbf{S}, \mathbf{X})
+\end{equation}
+% 其中X表示选手特征（职业、年龄等）
+where $\mathbf{X}$ denotes contestant features (profession, age, etc.).
+
+% --- 先验分布 ---
+\subsubsection{Prior Distribution}
+
+% 我们使用Dirichlet分布作为先验：
+We use a Dirichlet distribution as the prior:
+\begin{equation}
+\boldsymbol{\pi} \sim \text{Dirichlet}(\alpha \cdot \boldsymbol{\theta})
+\end{equation}
+% 其中α是控制集中度的先验强度参数，θ是先验权重向量
+where $\alpha$ is the prior strength parameter controlling concentration,
+and $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)$ is the prior weight vector.
+
+% 先验权重向量θ设计为加权混合：
+The weight vector $\boldsymbol{\theta}$ is designed as a weighted mixture:
+\begin{equation}
+\theta_i = (1 - \beta) \cdot f_i^{\text{feature}} + \beta \cdot \tilde{S}_i
+\end{equation}
+% 其中β控制先验与评委分数的关联程度，f_i^feature是选手i的特征权重，S̃_i是归一化评委分数
+where $\beta \in [0,1]$ controls the correlation between prior and judges' scores,
+$f_i^{\text{feature}}$ is the feature-based weight for contestant $i$,
+and $\tilde{S}_i = S_i / \sum_j S_j$ is the normalized judges' score.
+
+% 基于特征的权重：f_i^feature项融入职业人气权重和年龄效应
+\textbf{Feature-based weights}: The term $f_i^{\text{feature}}$ incorporates profession
+popularity weights (e.g., singers and actors typically have larger fan bases) and age effects.
+% 这些权重基于领域知识：某些职业天然拥有更大的粉丝群体
+These weights are based on domain knowledge that certain professions inherently command
+larger followings.
+% 重要的是，敏感性分析表明模型结果对这些权重设置的变化具有鲁棒性
+Importantly, our sensitivity analysis (Section~\ref{sec:sensitivity})
+demonstrates that model results are robust to variations in these weight settings,
+% 因为主要信息来自淘汰约束而非先验
+as the primary information comes from elimination constraints rather than priors.
+
+% 年龄效应：对25-35岁年龄段有轻微偏好（社交媒体参与度更高）
+\textbf{Age effect}:
+\begin{equation}
+\text{age\_factor}_i = 1.0 - 0.01 \times |a_i - 30|
+\end{equation}
+% 其中a_i是选手i的年龄，结果限制在[0.7, 1.2]范围内
+where $a_i$ is the age of contestant $i$, capped within $[0.7, 1.2]$.
+
+% --- 似然函数 ---
+\subsubsection{Likelihood Function}
+
+% 我们采用softmax软约束而非硬约束：
+We employ a softmax soft constraint instead of hard constraints:
+
+% 百分比法的似然：
+\textbf{For Percentage Method}:
+% 综合得分低的选手被淘汰概率更高（指数形式）
+\begin{equation}
+P(E = k | \boldsymbol{\pi}, \mathbf{S}) =
+  \frac{\exp(-\tau \cdot C_k^{\text{pct}})}{\sum_{j} \exp(-\tau \cdot C_j^{\text{pct}})}
+\end{equation}
+
+% 排名法的似然：
+\textbf{For Ranking Method}:
+% 综合排名高的选手被淘汰概率更高
+\begin{equation}
+P(E = k | \boldsymbol{\pi}, \mathbf{S}) =
+  \frac{\exp(\tau \cdot C_k^{\text{rank}})}{\sum_{j} \exp(\tau \cdot C_j^{\text{rank}})}
+\end{equation}
+
+% 温度参数τ控制约束的严格程度：值越高，对淘汰结果的约束越严格
+The temperature parameter $\tau$ controls constraint strictness:
+higher values enforce stricter adherence to elimination outcomes.
+% 我们使用动态温度：
+We use dynamic temperature:
+\begin{equation}
+\tau_{\text{eff}} = \tau_0 \cdot (1 + 2 \cdot m)
+\end{equation}
+% 其中τ_0是基础温度，m衡量淘汰边界的清晰程度
+where $\tau_0$ is the base temperature and $m$ measures the clarity of the elimination margin.
+
+
+% ============================================================================
+% 4.3 模型实现
+% ============================================================================
+
+\subsection{Model Implementation}
+
+% 由于后验分布没有解析解，我们使用MCMC采样来近似它
+Since the posterior distribution lacks an analytical solution, we approximate it
+using Markov Chain Monte Carlo (MCMC) sampling.
+
+% --- 单纯形上的提议分布 ---
+\subsubsection{Proposal Distribution on the Simplex}
+
+% 我们使用Dirichlet提议分布，它自然满足单纯形约束：
+We use a Dirichlet proposal that naturally respects the simplex constraint:
+\begin{equation}
+\boldsymbol{\pi}' \sim \text{Dirichlet}\left(\frac{\boldsymbol{\pi}}{\lambda}\right)
+\end{equation}
+% 其中λ是控制探索幅度的提议步长
+where $\lambda$ is the proposal step size controlling exploration magnitude.
+
+% --- 自适应步长 ---
+\subsubsection{Adaptive Step Size}
+
+% 步长λ自适应调整以达到约30%的目标接受率
+The step size $\lambda$ is adaptively adjusted to maintain an acceptance rate around 30\%.
+
+% --- 超参数设置 ---
+\subsubsection{Hyperparameter Settings}
+
+% 默认超参数：τ_0=12, α=1.5, β=0.3, λ_0=0.06
+The default hyperparameters are: $\tau_0=12$, $\alpha=1.5$, $\beta=0.3$, $\lambda_0=0.06$,
+% 在3000次预热后采集10000个后验样本
+with $N=10000$ posterior samples after $B=3000$ burn-in iterations.
+% 这些值通过敏感性分析确定，以平衡模型性能和计算效率
+These values were
+determined through sensitivity analysis to balance model performance and computational
+efficiency.
+% 固定随机种子以确保可重复性
+The random seed is fixed to ensure reproducibility.
+
+% ============================================================================
+% 4.4 结果验证
+% ============================================================================
+
+\subsection{Results and Validation}
+
+% --- 一致性指标（Q1a）---
+\subsubsection{Consistency Metrics (Q1a)}
+
+% 淘汰预测准确率(EPA)：预测正确的周数占总周数的比例
+\textbf{Elimination Prediction Accuracy (EPA)}:
+\begin{equation}
+\text{EPA} = \frac{1}{W} \sum_{w=1}^{W} \mathbb{I}[\hat{E}_w = E_w]
+\end{equation}
+
+% 平均淘汰概率：模型对实际淘汰结果的平均置信度
+\textbf{Mean Elimination Probability}:
+\begin{equation}
+\bar{P}_{\text{elim}} = \frac{1}{W} \sum_{w=1}^{W} P(E_w | \bar{\boldsymbol{\pi}}_w, \mathbf{S}_w)
+\end{equation}
+
+% 其他指标包括Top-2准确率和Kendall's τ秩相关系数
+Additional metrics include Top-2 accuracy and Kendall's $\tau$ rank correlation.
+
+% 表格总结了34季的一致性指标
+Table~\ref{tab:consistency} summarizes the consistency metrics across all 34 seasons.
+
+\begin{table}[htbp]
+\centering
+\caption{Consistency Metrics Summary (Q1a)}
+% 一致性指标汇总表
+\label{tab:consistency}
+\begin{tabular}{lc}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+% 分析的总周数
+Total weeks analyzed & 301 \\
+% 淘汰预测准确率
+Elimination Prediction Accuracy (EPA) & 93.7\% \\
+% Top-2准确率（淘汰者在预测的后两名中）
+Top-2 Accuracy & 97.7\% \\
+% 平均淘汰概率
+Mean Elimination Probability & 0.481 \\
+% 平均Kendall's τ
+Mean Kendall's $\tau$ & 0.717 \\
+\hline
+% 按计分方法分类：
+\multicolumn{2}{l}{\textit{By Scoring Method:}} \\
+% 排名法（74周）
+\quad Ranking Method (n=74) & EPA = 95.9\% \\
+% 百分比法（227周）
+\quad Percentage Method (n=227) & EPA = 93.0\% \\
+\hline
+\end{tabular}
+\end{table}
+
+% --- 一致性结果分析 ---
+% 结果表明模型与观测淘汰结果一致
+The 93.7\% EPA indicates that our estimated vote distributions correctly predict
+the actual elimination in most weeks.
+% Top-2准确率97.7%：几乎所有情况下，实际被淘汰者都在模型预测的后两名中
+The 97.7\% Top-2 accuracy shows that in nearly all cases, the eliminated contestant
+was among the bottom two predicted by our model.
+% 排名法EPA略高于百分比法，这与排名法的离散约束更明确有关
+The Ranking Method achieves slightly higher EPA (95.9\%) than the Percentage Method (93.0\%),
+likely due to its sharper discrete constraints.
+% Kendall's τ为0.717表明预测排名与投票排名相关性较好
+The Kendall's $\tau$ of 0.717 indicates reasonable rank correlation between predicted
+and implied vote rankings.
+
+% --- 确定性指标（Q1b）---
+\subsubsection{Certainty Metrics (Q1b)}
+
+% 变异系数(CV)：标准差与均值的比值，衡量估计的相对不确定性
+\textbf{Coefficient of Variation (CV)}:
+\begin{equation}
+\text{CV}_i = \frac{\sigma_{\pi_i}}{\mu_{\pi_i}}
+\end{equation}
+
+% 95%可信区间宽度：后验分布的2.5%和97.5%分位数之差
+\textbf{95\% Credible Interval Width}:
+\begin{equation}
+\text{CI}_i = \pi_i^{97.5\%} - \pi_i^{2.5\%}
+\end{equation}
+
+% 我们还报告有效样本量(ESS)和MCMC接受率来评估采样质量
+We also report effective sample size (ESS) and MCMC acceptance rates to assess
+sampling quality.
+
+% 表格总结了确定性指标
+Table~\ref{tab:certainty} summarizes the certainty metrics.
+
+\begin{table}[htbp]
+\centering
+\caption{Certainty Metrics Summary (Q1b)}
+% 确定性指标汇总表
+\label{tab:certainty}
+\begin{tabular}{lc}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+% 所有选手的平均CV
+Mean CV (all contestants) & 0.710 \\
+% 平均95%可信区间宽度
+Mean 95\% CI Width & 0.292 \\
+\hline
+% 按淘汰状态分类：
+\multicolumn{2}{l}{\textit{By Elimination Status:}} \\
+% 被淘汰选手的CV
+\quad Eliminated contestants CV & 0.761 \\
+% 未被淘汰选手的CV
+\quad Non-eliminated contestants CV & 0.704 \\
+% 被淘汰选手的CI宽度
+\quad Eliminated contestants CI width & 0.167 \\
+% 未被淘汰选手的CI宽度
+\quad Non-eliminated contestants CI width & 0.308 \\
+\hline
+\end{tabular}
+\end{table}
+
+% --- 确定性结果分析 ---
+% 平均CV为0.710，反映逆问题固有的不确定性
+The mean CV of 0.710 reflects the inherent uncertainty of this inverse problem.
+% 被淘汰者CI更窄，因为淘汰事件提供了强约束
+Eliminated contestants have narrower CI widths (0.167 vs. 0.308) because
+the elimination event constrains their vote share more tightly.
+
+
+% ----------------------------------------------------------------------------
+% 第5章：Task 2 - 计分方法比较
+% ----------------------------------------------------------------------------
+\section{Task 2: Scoring Method Comparison}
+
+\subsection{Ranking Method vs. Percentage Method}
+
+% 回顾3.3节中定义的两种计分方法，这里聚焦于它们的关键差异。
+Recall the two scoring methods defined in Section~\ref{sec:scoring-evolution}.
+% 我们不重复数学公式，而是关注影响淘汰决策的核心差异。
+Rather than repeating the mathematical formulations, we focus on the key differences
+that affect elimination decisions.
+
+% 排名法将评委分数和观众投票分别转换为名次后相加。
+The Ranking Method converts both judges' scores and audience votes to ordinal ranks
+before combining them.
+% 这种转换消除了原始分数的数值信息，只保留相对顺序。
+This conversion discards the numerical magnitude, preserving only relative ordering.
+% 因此，30分和25分的差距在排名法中与25分和24分的差距等价——都只差一个名次。
+Consequently, a gap between 30 and 25 points carries the same weight as a gap between
+25 and 24 points---both represent a single rank difference.
+
+% 相比之下，百分比法保留分数的数值信息。
+In contrast, the Percentage Method preserves numerical information.
+% 分数差距大的选手在百分比贡献上也会有更大差距。
+Contestants with larger score gaps will have correspondingly larger gaps in their
+percentage contributions.
+% 这使得百分比法对评委分数的离散程度更加敏感。
+This makes the Percentage Method more sensitive to the dispersion of judges' scores.
+
+% 两种方法的核心差异可以从三个维度理解：
+The fundamental differences can be understood along three dimensions:
+\begin{itemize}
+    % 权重结构：固定 vs 动态
+    \item \textbf{Weight structure}: The Ranking Method assigns fixed 50\%--50\% weights
+    to judges and audience (in rank contribution), while the Percentage Method has
+    dynamic effective weights depending on score distributions.
+    % 敏感性：离散 vs 连续
+    \item \textbf{Sensitivity}: The Ranking Method exhibits step-function sensitivity
+    (only responds when ranks change), while the Percentage Method responds
+    continuously to any score change.
+    % 极端值抗性
+    \item \textbf{Robustness to extremes}: The Ranking Method is robust to outliers
+    since it only uses ordinal information, while the Percentage Method can be
+    dominated by extreme scores.
+\end{itemize}
+
+% 这些差异意味着两种方法可能产生不同的淘汰决定。
+These differences imply that the two methods may produce different elimination
+decisions for the same underlying data.
+% 我们接下来量化这些差异的频率和模式。
+We next quantify the frequency and patterns of such discrepancies.
+
+\subsection{Comparative Metrics}
+
+% 为了系统地比较两种计分方法，我们定义以下评估指标。
+To systematically compare the two scoring methods, we define evaluation metrics
+targeting the core question: does one method favor fan votes more?
+
+% === 淘汰翻转率 ===
+\subsubsection{Elimination Flip Rate (EFR)}
+
+% 淘汰翻转率衡量当切换计分方法时，淘汰决定改变的频率。
+The Elimination Flip Rate measures how often the elimination decision changes
+when switching between scoring methods.
+% 形式化定义：
+Formally:
+\begin{equation}
+    \text{EFR} = \frac{1}{W}\sum_{w=1}^{W} \mathbf{1}[E^{\text{actual}}_w \neq E^{\text{cf}}_w]
+\end{equation}
+% 其中W是分析的总周数，E表示被淘汰选手。
+where $W$ is the total number of weeks, and $E^{\text{actual}}_w$, $E^{\text{cf}}_w$
+denote the eliminated contestants under actual and counterfactual methods.
+
+% === 有效权重 ===
+\subsubsection{Effective Weight}
+
+% 核心问题是：在每种方法下，评委和观众的实际贡献比例是多少？
+The key question is: what is the actual contribution of judges versus audience
+under each method?
+% 我们通过有效权重来回答。
+We answer this through \textit{effective weight}, defined as the variance
+contribution to the combined score:
+\begin{equation}
+    \alpha^{\text{pct}} = \frac{\text{Var}(P^{(S)})}{\text{Var}(P^{(S)}) + \text{Var}(P^{(V)})}
+\end{equation}
+% 其中P^(S)是评委分数百分比，P^(V)是投票百分比。
+where $P^{(S)}$ and $P^{(V)}$ are the judges' score and vote percentages.
+% 观众有效权重为1-α。
+The effective audience weight is $1 - \alpha$.
+% 对于排名法，理论权重固定为0.5。
+For the Ranking Method, the theoretical weight is fixed at 0.5.
+
+\subsection{Results}
+
+% 我们使用Task 1的投票估计结果，对34季301周数据进行反事实模拟分析。
+Using the vote estimates from Task~1, we conduct counterfactual simulation on
+301 weeks across all 34 seasons.
+
+% 表格总结了反事实分析的整体结果。
+Table~\ref{tab:counterfactual-summary} summarizes the counterfactual analysis results.
+
+\begin{table}[htbp]
+\centering
+\caption{Counterfactual Analysis Summary}
+% 反事实分析汇总表
+\label{tab:counterfactual-summary}
+\begin{tabular}{lccc}
+\hline
+\textbf{Metric} & \textbf{Overall} & \textbf{Ranking} & \textbf{Percentage} \\
+\hline
+% 分析周数
+Weeks analyzed & 301 & 74 & 227 \\
+% 淘汰翻转次数
+Elimination flips & 66 & 0 & 66 \\
+% 淘汰翻转率
+Elimination Flip Rate & 21.9\% & 0.0\% & 29.1\% \\
+% 平均Kendall's τ
+Mean Kendall's $\tau$ & 0.828 & 0.703 & 0.868 \\
+% 平均Spearman's ρ
+Mean Spearman's $\rho$ & 0.897 & 0.785 & 0.934 \\
+\hline
+\end{tabular}
+\end{table}
+
+% 关键发现：排名法时期翻转率为0，百分比法时期约29%的周会产生不同淘汰结果。
+A striking finding is that all 66 elimination flips occurred during the
+Percentage Method era (Seasons 3--27).
+% 排名法时期（第1-2季和第28-34季）没有发生任何翻转。
+No flips occurred during the Ranking Method periods (Seasons 1--2 and 28--34).
+
+% 表格展示了两种方法下的有效权重分析结果。
+Table~\ref{tab:weight-decomposition} presents the effective weight analysis,
+which directly addresses the question of method bias.
+
+\begin{table}[htbp]
+\centering
+\caption{Effective Weight Analysis}
+% 有效权重分析表
+\label{tab:weight-decomposition}
+\begin{tabular}{lcc}
+\hline
+\textbf{Metric} & \textbf{Ranking Method} & \textbf{Percentage Method} \\
+\hline
+% 评委有效权重
+Judge effective weight & 48.2\% & 22.9\% \\
+% 观众有效权重
+Audience effective weight & 51.8\% & 77.1\% \\
+% 观众权重>50%的周数占比
+Weeks with audience weight $>$50\% & $\sim$50\% & 93.4\% \\
+\hline
+\end{tabular}
+\end{table}
+
+% 权重分解回答了核心问题：哪种方法更偏向观众？
+The weight decomposition directly answers the core question: \textbf{which method
+favors fan votes more?}
+% 百分比法下观众有效权重平均达到77.1%，远高于排名法的51.8%。
+Under the Percentage Method, the effective audience weight averages 77.1\%,
+substantially exceeding the Ranking Method's 51.8\%.
+% 93.4%的周次中，百分比法给予观众超过50%的权重。
+In 93.4\% of weeks, the Percentage Method assigns more than half the effective
+weight to audience votes.
+
+% 这个结论可能与直觉相反。
+This finding may seem counterintuitive.
+% 解释：百分比法的有效权重取决于分数分布的方差。
+The explanation lies in variance: the Percentage Method's effective weights
+depend on the dispersion of scores.
+% 当投票分布比评委分数更分散时，投票对综合得分的影响更大。
+When vote distributions are more dispersed than judge scores---as is typically
+the case with our estimates---votes dominate the combined score.
+
+\subsection{Conclusion: The Percentage Method Favors Fan Votes}
+
+% 基于以上分析，我们得出明确结论：
+Based on our analysis, we reach a clear conclusion:
+
+% 百分比法更偏向观众投票。
+\textbf{The Percentage Method favors fan votes more than the Ranking Method.}
+
+% 证据如下：
+The evidence is threefold:
+\begin{enumerate}
+    % 证据1：有效权重
+    \item \textbf{Effective weights}: The Percentage Method assigns 77.1\% effective
+    weight to audience votes, compared to 51.8\% under the Ranking Method.
+    % 证据2：翻转模式
+    \item \textbf{Flip patterns}: All 66 elimination flips occurred during the
+    Percentage Method era, suggesting this method is more susceptible to vote
+    fluctuations overriding judge preferences.
+    % 证据3：争议案例
+    \item \textbf{Controversy cases}: Notable controversies (Bobby Bones in Season 27,
+    Bristol Palin in Season 11) all occurred during the Percentage Method era,
+    where high fan support could overcome low judge scores.
+\end{enumerate}
+
+% 这解释了为什么节目在第28季后回归排名法。
+This explains why the show returned to the Ranking Method starting in Season 28:
+% 制作方希望恢复评委与观众之间的平衡。
+producers sought to restore balance between judges and audience influence.
+
+% 这些发现将为Task 3的争议案例分析提供分析框架。
+These findings provide the analytical framework for examining specific
+controversy cases in Task~3.
+
+% ----------------------------------------------------------------------------
+% 第6章：Task 3 - 争议案例分析
+% ----------------------------------------------------------------------------
+\section{Task 3: Controversy Case Analysis}
+
+\subsection{Identifying Controversial Cases}
+% TODO: 识别争议案例
+% - Jerry Rice (Season 2)
+% - Billy Ray Cyrus (Season 4)
+% - Bristol Palin (Season 11)
+% - Bobby Bones (Season 27)
+
+\subsection{Counterfactual Analysis}
+% TODO: 反事实分析
+% - 如果使用另一种计分方法，结果如何变化
+
+\subsection{Findings}
+% TODO: 发现
+% - 计分方法对争议的贡献
+
+% ----------------------------------------------------------------------------
+% 第7章：Task 4 - 方法与机制讨论
+% ----------------------------------------------------------------------------
+\section{Task 4: Discussion on Methods and Mechanisms}
+
+\subsection{Pros and Cons of Each Method}
+% TODO: 各方法优缺点
+
+\subsection{Judge Elimination Mechanism}
+% TODO: 评委淘汰机制分析（Season 28+）
+
+\subsection{Recommendations}
+% TODO: 综合建议
+
+% ----------------------------------------------------------------------------
+% 第8章：Task 5 - 特征影响分析
+% ----------------------------------------------------------------------------
+\section{Task 5: Feature Impact Analysis}
+
+\subsection{Professional Partner Effect}
+% TODO: 舞伴效应
+% - 固定效应模型
+% - 舞伴排名
+
+\subsection{Celebrity Characteristics}
+% TODO: 选手特征影响
+% - 年龄
+% - 职业背景
+% - 地区
+
+\subsection{Model Results}
+% TODO: 模型结果
+% - 回归系数
+% - 特征重要性
+
+% ----------------------------------------------------------------------------
+% 第9章：Task 6 - 新计分系统设计
+% ----------------------------------------------------------------------------
+\section{Task 6: New Scoring System Design}
+
+\subsection{Design Objectives}
+% TODO: 设计目标
+% - 公平性
+% - 观众参与度
+% - 戏剧性
+% - 稳定性
+
+\subsection{Proposed System: Dynamic Weighted Hybrid}
+% TODO: 提议系统
+% - 动态权重公式
+% - 进步奖励机制
+
+\subsection{Historical Backtesting}
+% TODO: 历史回测
+% - 评估指标
+% - 与现有方法对比
+
+\subsection{Recommendations}
+% TODO: 建议
+
+% ----------------------------------------------------------------------------
+% 第10章：敏感性分析
+% ----------------------------------------------------------------------------
+\section{Sensitivity Analysis}
+\label{sec:sensitivity}
+
+To validate the robustness of our vote estimation model, we conduct comprehensive
+sensitivity analysis on key hyperparameters.
+
+\subsection{Hyperparameter Impact Analysis}
+
+We systematically vary each hyperparameter while holding others at default values,
+measuring the impact on Elimination Prediction Accuracy (EPA):
+
+\begin{itemize}
+    \item \textbf{Temperature $\tau$}: Controls the softness of elimination constraints.
+          Tested range: $[3, 30]$. Default: $\tau_0 = 12$.
+    \item \textbf{Prior strength $\alpha$}: Controls the concentration of the Dirichlet prior.
+          Tested range: $[0.5, 10]$. Default: $\alpha = 1.5$.
+    \item \textbf{Prior correlation $\beta$}: Controls the weight of judges' scores in the prior.
+          Tested range: $[0, 1.5]$. Default: $\beta = 0.3$.
+    \item \textbf{Initial scale $\lambda_0$}: Controls the initial MCMC proposal step size.
+          Tested range: $[0.02, 0.15]$. Default: $\lambda_0 = 0.06$.
+\end{itemize}
+
+\subsection{Robustness of Feature Weights}
+
+The profession-based popularity weights in our prior (e.g., singers having larger
+fan bases than news anchors) are based on domain knowledge rather than empirical
+calibration. We specifically analyze whether model results are sensitive to these
+weight settings.
+
+Our analysis shows that the EPA variation across different weight configurations
+remains within acceptable bounds (EPA range $< 0.1$), demonstrating that:
+\begin{enumerate}
+    \item The primary information driving vote estimates comes from the \textbf{elimination constraints}
+          (likelihood function), not the prior weights.
+    \item The prior serves mainly to regularize the solution and provide initial direction,
+          but does not dominate the posterior.
+    \item Even with substantially different weight assumptions, the model reaches
+          similar conclusions about vote distributions.
+\end{enumerate}
+
+This robustness is expected: Bayesian inference with sufficient data (elimination events)
+naturally down-weights prior influence as likelihood information accumulates.
+
+\subsection{Stability Summary}
+
+For each hyperparameter, we compute the EPA range (max - min) across tested values:
+\begin{itemize}
+    \item EPA range $< 0.1$: High stability
+    \item EPA range $\in [0.1, 0.2]$: Medium stability
+    \item EPA range $> 0.2$: Low stability (requires careful tuning)
+\end{itemize}
+
+Our results indicate that all four hyperparameters exhibit high to medium stability,
+confirming that the model is robust to reasonable parameter variations.
+
+% ----------------------------------------------------------------------------
+% 第11章：模型验证
+% ----------------------------------------------------------------------------
+\section{Model Validation}
+
+% TODO: 模型验证
+% - 交叉验证
+% - 留一季验证
+
+% ----------------------------------------------------------------------------
+% 第12章：优缺点
+% ----------------------------------------------------------------------------
+\section{Strengths and Weaknesses}
+
+\subsection{Strengths}
+% TODO: 优点
+
+\subsection{Weaknesses}
+% TODO: 缺点
+
+% ----------------------------------------------------------------------------
+% 第13章：结论
+% ----------------------------------------------------------------------------
+\section{Conclusions}
+
+% TODO: 结论
+
+% ----------------------------------------------------------------------------
+% 备忘录
+% ----------------------------------------------------------------------------
+\newpage
+\section{Memo to Producers}
+
+\begin{center}
+\textbf{MEMORANDUM}
+\end{center}
+
+\noindent\textbf{TO:} Dancing with the Stars Production Team \\
+\textbf{FROM:} Team 2622678 \\
+\textbf{DATE:} January 2026 \\
+\textbf{RE:} Recommendations for Scoring System Improvements
+
+\vspace{1em}
+
+\subsection*{Executive Summary}
+% TODO: 执行摘要
+
+\subsection*{Key Findings}
+% TODO: 关键发现
+
+\subsection*{Recommendations}
+% TODO: 建议
+
+\subsection*{Implementation Considerations}
+% TODO: 实施考虑
+
+% ----------------------------------------------------------------------------
+% 参考文献
+% ----------------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+% TODO: 添加参考文献
+% \bibitem{1} Author, Title, Journal, Year.
+
+\end{thebibliography}
+
+\end{document}
