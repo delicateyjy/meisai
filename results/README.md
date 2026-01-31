@@ -16,9 +16,10 @@
 
 | 文件 | 说明 | 记录数 | 关键字段 |
 |------|------|--------|----------|
-| `task2_comparison_stats.csv` | 两种方法的统计对比 | 34季 | `diff_rate`, `rank_upset_rate`, `pct_upset_rate` |
-| `task2_counterfactual.csv` | 反事实分析结果 | 301周 | `actual_elim`, `alt_elim`, `would_change` |
-| `task2_weight_analysis.csv` | 隐含权重分析 | 301周 | `judge_weight`, `vote_weight`, `sensitivity` |
+| `task2_counterfactual.csv` | 反事实模拟结果 | 301周 | `actual_eliminated`, `cf_eliminated`, `elimination_flipped`, `rank_tau`, `rank_rho` |
+| `task2_comparison_stats.csv` | 分组统计汇总 | 38行 | `group`, `flip_count`, `elimination_flip_rate`, `mean_rank_tau` |
+| `task2_weight_analysis.csv` | 有效权重分解 | 301周 | `judge_weight_rank`, `vote_weight_rank`, `judge_weight_pct`, `vote_weight_pct` |
+| `task2_upset_rate.csv` | 翻盘率分析 | 301周 | `actual_eliminated`, `judge_lowest`, `is_upset` |
 
 ## 数据说明
 
@@ -30,8 +31,16 @@
 
 ### Task 2 核心指标
 
-- **diff_rate**: 两种方法产生不同淘汰结果的比例
-- **upset_rate**: 评委最低分选手未被淘汰的比例（"翻盘率"）
+- **EFR (Elimination Flip Rate)**: 淘汰翻转率
+  - 整体: 21.9% (66/301)
+  - 排名法: 0.0% (0/74)
+  - 百分比法: 29.1% (66/227)
+- **Effective Weight**: 有效权重
+  - 排名法观众权重: 51.8%
+  - 百分比法观众权重: 77.1% (93.4%周次 > 50%)
+- **Upset Rate**: 翻盘率（评委最低分者未被淘汰）
+  - 排名法: 64.9% (48/74)
+  - 百分比法: 54.6% (124/227)
 
 ## 生成方式
 
@@ -39,10 +48,12 @@
 # 生成 Task 1 结果
 cd scripts && python task1_vote_estimator_v3.py
 
-# 生成 Task 2 结果
+# 生成 Task 2 结果 (按顺序执行)
 cd scripts && python task2_scoring_methods.py
+cd scripts && python task2_comparison_analysis.py
+cd scripts && python task2_weight_decomposition.py
 ```
 
 ---
 
-*最后更新: 2026-01-30*
+*最后更新: 2026-01-31*

@@ -525,6 +525,7 @@ def run_weight_analysis(data_path: str, vote_estimates_path: str) -> pd.DataFram
 
 ---
 
-*文档版本：v1.0*
+*文档版本：v2.0*
 *创建时间：2026-01-30*
-*状态：方法论框架完成，结果待填*
+*更新时间：2026-01-31*
+*状态：分析完成*
