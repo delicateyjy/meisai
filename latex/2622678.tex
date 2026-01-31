@@ -432,7 +432,7 @@ The random seed is fixed to ensure reproducibility.
 Additional metrics include Top-2 accuracy and Kendall's $\tau$ rank correlation.
 
 % 表格总结了34季的一致性指标
-Table~\ref{tab:consistency} summarizes the consistency metrics across all 34 seasons.
+Table~\ref{tab:consistency} summarizes the consistency metrics in all 34 seasons.
 
 \begin{table}[htbp]
 \centering
@@ -587,888 +587,214 @@ Rather than point estimates, our model provides complete posterior distributions
 % 例如，后验均值15%、95%CI为[12%,18%]表示：
 For example, a posterior mean of 15\% with 95\% CI [12\%, 18\%] indicates that
 % "我们有95%的置信度认为该选手获得了12%到18%的观众投票"
-``we are 95\% confident the contestant received between 12\% and 18\% of audience votes.''
-
-% 这种诚实的不确定性量化对于后续任务至关重要
-This honest uncertainty quantification is crucial for subsequent tasks.
-% 在Task 2-3的比较分析中，我们将使用完整的后验分布而非点估计
-In Tasks 2--3, we will propagate this uncertainty through our comparative analyses,
-% 确保结论对投票估计中的不确定性具有鲁棒性
-ensuring that our conclusions are robust to the uncertainty in vote estimates.
-% 任何声称"观众投票比例恰好是X%"的模型都是过度自信的
-Any model claiming ``the audience vote share was exactly X\%'' would be overconfident;
-% 我们的贝叶斯方法避免了这种陷阱
-our Bayesian approach avoids this pitfall.
+``we are 95\% confident that the contestant received between 12\% and 18\% of audience votes.''
 
 
+% ----------------------------------------------------------------------------
+% 第5章：Task 2 - 计分方法比较
+% ----------------------------------------------------------------------------
+\section{Task 2: Scoring Method Comparison}
 
-% Chapter 3:
-\section{Fair Possibility Coefficient-Gini Coefficient (FPC-GC) Model}
-\vspace{-0.4cm}
-First of all, we need to clarify the definition of global equity: “exploration and use of outer space, including the moon and other celestial bodies, shall be carried out for the benefit and in the interests of all countries, irrespective of their degree of economic or scientific development, and shall be the province of all mankind”, as we all know from the 1967 UN Outer Space Treaty. Therefore, we think that global equity means that "a country can profit from asteroid mining regardless of its ability to participate in asteroid mining". 
+\subsection{Ranking Method vs. Percentage Method}
 
-We are going to develop a model that measures global equity, and it should satisfy the following conditions:
+% 回顾3.3节中定义的两种计分方法，这里聚焦于它们的关键差异。
+Recall the two scoring methods defined in Section~\ref{sec:scoring-evolution}.
+% 我们不重复数学公式，而是关注影响淘汰决策的核心差异。
+Rather than repeating the mathematical formulations, we focus on the key differences
+that affect elimination decisions.
+
+% 排名法将评委分数和观众投票分别转换为名次后相加。
+The Ranking Method converts both judges' scores and audience votes to ordinal ranks
+before combining them.
+% 这种转换消除了原始分数的数值信息，只保留相对顺序。
+This conversion discards the numerical magnitude, preserving only relative ordering.
+% 因此，30分和25分的差距在排名法中与25分和24分的差距等价——都只差一个名次。
+Consequently, a gap between 30 and 25 points carries the same weight as a gap between
+25 and 24 points---both represent a single rank difference.
+
+% 相比之下，百分比法保留分数的数值信息。
+In contrast, the Percentage Method preserves numerical information.
+% 分数差距大的选手在百分比贡献上也会有更大差距。
+Contestants with larger score gaps will have correspondingly larger gaps in their
+percentage contributions.
+% 这使得百分比法对评委分数的离散程度更加敏感。
+This makes the Percentage Method more sensitive to the dispersion of judges' scores.
+
+% 两种方法的核心差异可以从三个维度理解：
+The fundamental differences can be understood along three dimensions:
 \begin{itemize}
-	\item The model can measure the current global equity in the issue of "asteroid mining" well. 
-	\item The model should take more comprehensive range of factors into account, including history, region, and national power.
-	\item The model is of universal use. When the world's situation changes, our model can measure global equity by giving the appropriate indicators.
-\end{itemize}
-\vspace{-0.4cm}
-\subsection{Determination of Indicators}
-
-It is important to note that only few countries are currently able to conduct asteroid mining, and most countries in the world still do not have the ability to launch spacecraft into outer space for mining. Therefore, if these countries want to benefit from asteroid mining, they need help and support from countries that are able to participate in asteroid mining, such as technological support and benefit sharing. Therefore, the countries we are considering need to meet the following two conditions:
-\begin{itemize}
-	\item The country is capable of launching spacecraft for asteroid mining.
-	\item The country is capable and willing to comply with policies that are globally equitable and beneficial. Also, they are willing to provide scientific and technological support and resource sharing to those countries that are lagging behind.
-\end{itemize}
-
-Based on the above two principles, we define a new variable: the \textbf{Fair Probability Coefficient (FPC)}. The larger this factor, the greater a country's asteroid mining capability and the higher the likelihood of compliance with international treaties.
-
-For the purpose of asteroid mining, the country's technology and economy must be strong. Moreover, a country's willingness to share some of its benefits with other countries is predicated on that country having sufficient energy production and a desire to achieve global equity. We use the four indicators of "Energy Output (EO), Scientific and Technological Level (STL), Economic Level (EL), and Sense of Responsibility (SR)" as our superior indicators to determine the fairness likelihood factor, and the corresponding subordinate indicators are shown in the table below:
-\vspace{-0.2cm}
-\begin{table}[H]
-	\centering
-	\caption{The descriptions of indicators}
-	\setlength{\tabcolsep}{4pt}
-	\renewcommand{\arraystretch}{0.8}
-	\begin{tabular}{|l|l|c|}
-		\hline
-		\rowcolor[HTML]{96A6D4} 
-		\textbf{Superior Indicator}                                                             & \multicolumn{1}{c|}{\cellcolor[HTML]{96A6D4}\textbf{Subordinate Indicator}}                                                                                                                                                            & \textbf{Effect}                                       \\ \hline
-		\rowcolor[HTML]{DAE8FC} 
-		\begin{tabular}[c]{@{}l@{}}Energy Output \\ (EO)\end{tabular}                          & \begin{tabular}[c]{@{}l@{}}Mineral resources (MR)\\ Liquid fuel (LF)\end{tabular}                                                                                                                                                      & \begin{tabular}[c]{@{}c@{}}$ + $\\ $ + $\end{tabular}         \\ \hline
-		\rowcolor[HTML]{C7DFFF} 
-		\begin{tabular}[c]{@{}l@{}}Scientific and \\ Technological \\ Level (STL)\end{tabular} & \begin{tabular}[c]{@{}l@{}}Education index (EI)\\ Research and development expense (RDP) \\ Number of articles in scientific journals (NASJ)\\ Number of spacecraft launched (NSL)\end{tabular}                                        & \begin{tabular}[c]{@{}c@{}}$ + $\\ $ * $\\ $ * $\\ $ + $\end{tabular} \\ \hline
-		\rowcolor[HTML]{DAE8FC} 
-		\begin{tabular}[c]{@{}l@{}}Economic Level \\ (EL)\end{tabular}                         & \begin{tabular}[c]{@{}l@{}}GDP per capita (GDPP)\\ GDP\\ GDP growth (GDPG)\end{tabular}                                                                                                                                                 & \begin{tabular}[c]{@{}c@{}}$ + $\\ $ + $\\ $ + $\end{tabular}     \\ \hline
-		\rowcolor[HTML]{C7DFFF} 
-		\begin{tabular}[c]{@{}l@{}}Sense of \\ Responsibility \\ (SR)\end{tabular}             & \begin{tabular}[c]{@{}l@{}}Amount of foreign aid in the last ten years (AFA)\\ Number of breaches of international treaties (NBIT)\\ Military strength score (MSS)\\ Number of countries with diplomatic relations (NCDR)\end{tabular} & \begin{tabular}[c]{@{}c@{}}$ + $\\ $ - $\\ $ * $\\ $ + $\end{tabular} \\ \hline
-	\end{tabular}
-\end{table}
-\vspace{-0.4cm}
-\newpage
-In this table, effects of "$ + $" are benefit attributes (the larger the better), effects of "$ - $" are cost attributes (the smaller the better), and effects of "$ * $" are interval attributes (the closer to a certain interval [$ a $, $ b $] the better).
-
-\begin{enumerate}
-	\item \textbf{Energy Output (EO)}
-	\begin{itemize}
-		\setlength{\parsep}{0ex} %段落间距
-		\setlength{\topsep}{2ex} %列表到上下文的垂直距离
-		\setlength{\itemsep}{1ex} %条目间距
-		\item \textbf{\emph{MR}}: MR means a country's mineral resources.
-		\item \textbf{\emph{LF}}: LF means Liquid fuel which represents a country's production of liquid fuels.
-	\end{itemize}
-	\item \textbf{Scientific and Technological Level (STL)}
-	\begin{itemize}
-		\setlength{\parsep}{0ex} %段落间距
-		\setlength{\topsep}{2ex} %列表到上下文的垂直距离
-		\setlength{\itemsep}{1ex} %条目间距
-		\item \textbf{\emph{EI}}: EI means education index, which represent the educational performance of a country.
-		\item \textbf{\emph{RDP}}: RDP represents a country's R\&D spending as a percentage of GDP. Considering that the RDP of a country like South Korea, which is making great efforts to develop science and technology, is higher than other countries, but its level of science and technology is not very outstanding. So, we this is an interval attribute indicator, and according to the characteristics of the indicator, we set the optimal interval as \textbf{[2.5, 2.8]}.
-		\item \textbf{\emph{NASJ}}: NASJ represents the number of scientific articles published by a country in international journals in the past year. Considering that excessive focus on the number of journals will hinder the development of manufacturing, so we set the optimal interval to \textbf{[100,120]}.
-		\item \textbf{\emph{NSL}}: NSL means the number of spacecrafts launched. 
-	\end{itemize}
-	\item \textbf{Economic Level (EL)}
-	\begin{itemize}
-		\setlength{\parsep}{0ex} %段落间距
-		\setlength{\topsep}{2ex} %列表到上下文的垂直距离
-		\setlength{\itemsep}{1ex} %条目间距
-		\item \textbf{\emph{GDPP}}: GDPP means the GDP per capita. 
-		\item \textbf{\emph{GDP}}: GDP means gross domestic product in a certain period of time. 
-		\item \textbf{\emph{GDPG}}: GDPG means GDP growth in the past year.
-	\end{itemize}
-	\item \textbf{Sense of Responsibility (SR)}
-	\begin{itemize}
-		\setlength{\parsep}{0ex} %段落间距
-		\setlength{\topsep}{2ex} %列表到上下文的垂直距离
-		\setlength{\itemsep}{1ex} %条目间距
-		\item \textbf{\emph{AFA}}: AFA represents the total amount of foreign aid a country has provided over the past decade. The higher the AFA, the more friendly the country is as well as the more likely it tends to be responsible on issues of global equity.
-		\item \textbf{\emph{NBIT}}: NBIT represents the number of times a country has violated international treaties in its history. The higher the NBIT, the less credible and less accountable the country is, so this is a cost attribute indicator.
-		\item \textbf{\emph{MSS}}: MSS means military strength score. We believe that excessive military power in a country may facilitate a dictatorship by that country, and no international conventions will be able to restrain their behavior, so we set the best interval as \textbf{[0.15, 0.17]}.
-		\item \textbf{\emph{NCDR}}: NCDR means the number of countries with diplomatic relations. 
-	\end{itemize}
-\end{enumerate}
-
-\subsection{Data Pre-processing}
-\subsubsection{Data Collection}
-Adequate data are the foundation for designing the evaluation system. Considering that there are only a limited number of countries that have the capability to launch spacecraft for asteroid mining, we selected 25 countries that are currently able to launch spacecraft or will launch spacecraft in the next few years for data collection. The countries participating in the evaluation including Asia's China and Japan, North America's United States and Canada, and Europe's France and United Kingdom. In addition, our data were obtained from credible official websites such as the World Bank, the U.S. Bureau of Statistics, UNESCO, etc.
-\subsubsection{Data Filling}
-Due to the limited access to international data and the fact that certain countries do not count the indicators we have selected or are not included by the United Nations and other international organizations, so the data we have collected are a little bit missing, and in order to fill these missing data, we have done the followings:
-\begin{enumerate}
-	\item For the Energy output data, we considering that a certain natural resource is concentrated in a particular landscape. Therefore, we look for a country that is geographically similar to it and use the ratio of the territory of the two countries to approximate the ratio of natural resource reserves to obtain the natural resource reserves of the country.
-	\item For some indicators with small variance and few missing values, we chose to use the mean of that indicator as an alternative.
-	\item For some indicators with few missing values and strong time correlation, we use regression interpolation to fill them.
-	\item In the case where a country lacks data for all years for a statistical indicator, by considering the specific meaning of the indicator, we use the mean value of all countries to fill it.
-\end{enumerate}
-
-By processing the missing values, we obtained complete data for all 25 countries for the last 20 years.
-
-\subsubsection{Handling Outliers}
-
-We analyze each indicator through descriptive statistics and box line plots. We found highly anomalous outliers that deviated from the mean by more than twice the standard deviation in all countries.
-\begin{itemize}
-	\setlength{\itemsep}{1ex} %条目间距
-	\item For data with $\alpha <$ 0.01, we discarded them and then filled them with the method mentioned above.
-	\item In addition, in order not to create a large noise in the results of the latter method, we also discarded some outliers that differed significantly from other indicators and filled in the missing values using the above method.
+    % 权重结构：固定 vs 动态
+    \item \textbf{Weight structure}: The Ranking Method assigns fixed 50\%--50\% weights
+    to judges and audience (in rank contribution), while the Percentage Method has
+    dynamic effective weights depending on score distributions.
+    % 敏感性：离散 vs 连续
+    \item \textbf{Sensitivity}: The Ranking Method exhibits step-function sensitivity
+    (only responds when ranks change), while the Percentage Method responds
+    continuously to any score change.
+    % 极端值抗性
+    \item \textbf{Robustness to extremes}: The Ranking Method is robust to outliers
+    since it only uses ordinal information, while the Percentage Method can be
+    dominated by extreme scores.
 \end{itemize}
 
-\subsubsection{Data Normalization}
-Since we have obtained complete and reliable data after the above steps, it is important to take into account that the different metrics are not the same type. Therefore, in order to use the same metric, we also need to standardize all the metrics. For the different types of metrics, we use the following different ways of standardization:
-\begin{itemize}
-	\item Benefit Attributes: the bigger the better.
-	\begin{equation}
-		\tilde{x}_{i j}=\frac{x_{i j}-\min \left\{x_{i}\right\}}{\max \left\{x_{i}\right\}-\min \left\{x_{i}\right\}}
-	\end{equation}
-	\item Cost Attributes: the smaller the better.
-	\begin{equation}
-		\tilde{x}_{i j}=\frac{\max \left\{x_{i}\right\}-x_{i j}}{\max \left\{x_{i}\right\}-\min \left\{x_{i}\right\}}
-	\end{equation}
-	\item Interval Attributes: its optimal value lies within a certain interval [$ a $, $ b $].
-	\begin{equation}
-		M=\max \left\{a-\min \left\{x_{i}\right\}, \max \left\{x_{i}\right\}-b\right\}
-	\end{equation}
-    \begin{equation}
-	    \tilde{x}_{i j}=\left\{\begin{array}{l}
-	    	1-\frac{a-x_{i j}}{M}, x_{i j}<a \\
-	    	\\
-	    	1 \quad, a \leqslant x_{i j} \ll b \\
-	    	\\
-	    	1-\frac{x_{i j}-b}{M}, x_{i j}>b
-	    \end{array}\right.
-    \end{equation}
-\end{itemize}
+% 这些差异意味着两种方法可能产生不同的淘汰决定。
+These differences imply that the two methods may produce different elimination
+decisions for the same underlying data.
+% 我们接下来量化这些差异的频率和模式。
+We next quantify the frequency and patterns of such discrepancies.
 
-\subsection{Determination of the Weights for Indicators}
-There are various ways to determine the weights of each indicator. Considering that the \textbf{Analytic Hierarchy Process (AHP)} is more subjective in determining the weights and is vulnerable to the subjective perception of decision makers. While the \textbf{Entropy Weighting Method (EWM)} is more sensitive to the data, even though we have preprocessed the data, we cannot avoid the situation that some data do not match the actual situation, so we use the \textbf{EWM-AHP} combined weighting method to reduce our errors and improve the accuracy of our model.
+\subsection{Comparative Metrics}
 
-\subsubsection{Determination of Weights by EWM}
+% 为了系统地比较两种计分方法，我们定义以下评估指标。
+To systematically compare the two scoring methods, we define evaluation metrics
+targeting the core question: does one method favor fan votes more?
 
-In the EWM, the greater the dispersion of an indicator, the higher its corresponding weight is. The data we collect is real, so it can reflect the information in reality very well. We take each superior indicator and its corresponding subordinate indicator as an evaluation system, and let there be $ n $ objects to be evaluated in our evaluation system and $ m $ evaluation indicators that have been standardized to form a standardized matrix\upcite{2}, which is showed below:
-	\begin{equation}
-	X=\left[\begin{array}{cccc}
-		x_{11} & x_{12} & \cdots & x_{1 m} \\
-		x_{21} & x_{22} & \cdots & x_{2 m} \\
-		\vdots & \vdots & \ddots & \vdots \\
-		x_{n 1} & x_{n 2} & \cdots & x_{n m}
-	\end{array}\right]
-\end{equation}
+% === 淘汰翻转率 ===
+\subsubsection{Elimination Flip Rate (EFR)}
 
-We define the normalized matrix as $ Z $, and each element in $ Z $ as:
+% 淘汰翻转率衡量当切换计分方法时，淘汰决定改变的频率。
+The Elimination Flip Rate measures how often the elimination decision changes
+when switching between scoring methods.
+% 形式化定义：
+Formally:
 \begin{equation}
-	z_{ij}=\frac{x_{ij}}{\sqrt{\sum\limits_{i=1}^n{{x_{ij}}^2}}}
+    \text{EFR} = \frac{1}{W}\sum_{w=1}^{W} \mathbf{1}[E^{\text{actual}}_w \neq E^{\text{cf}}_w]
 \end{equation}
+% 其中W是分析的总周数，E表示被淘汰选手。
+where $W$ is the total number of weeks, and $E^{\text{actual}}_w$, $E^{\text{cf}}_w$
+denote the eliminated contestants under actual and counterfactual methods.
 
-%Determine whether there are negative numbers in the $ z $ matrix, and if so, normalize the matrix $ x $ using another method to obtain the $ \widetilde{z} $ matrix, which is normalized by the formula:
-%\begin{equation}
-%	\tilde{z}_{i j}=\frac{x_{i j}-\min \left\{x_{1 j}, x_{2 j}, \cdots, x_{n j}\right\}}{\max \left\{x_{1 j}, x_{2 j}, \cdots, x_{n j}\right\}-\min \left\{x_{1 j}, x_{2 j}, \cdots, x_{n j}\right\}}
-%\end{equation}
+% === 有效权重 ===
+\subsubsection{Effective Weight}
 
-After processing, we get the normalized matrix:
+% 核心问题是：在每种方法下，评委和观众的实际贡献比例是多少？
+The key question is: what is the actual contribution of judges versus audience
+under each method?
+% 我们通过有效权重来回答。
+We answer this through \textit{effective weight}, defined as the variance
+contribution to the combined score:
 \begin{equation}
-Z=\left[ \begin{matrix}
-	z_{11}&		z_{12}&		\cdots&		z_{1m}\\
-	z_{21}&		z_{22}&		\cdots&		z_{2m}\\
-	\vdots&		\vdots&		\ddots&		\vdots\\
-	z_{n1}&		z_{n2}&		\cdots&		z_{nm}\\
-\end{matrix} \right] 
+    \alpha^{\text{pct}} = \frac{\text{Var}(P^{(S)})}{\text{Var}(P^{(S)}) + \text{Var}(P^{(V)})}
 \end{equation}
+% 其中P^(S)是评委分数百分比，P^(V)是投票百分比。
+where $P^{(S)}$ and $P^{(V)}$ are the judges' score and vote percentages.
+% 观众有效权重为1-α。
+The effective audience weight is $1 - \alpha$.
+% 对于排名法，理论权重固定为0.5。
+For the Ranking Method, the theoretical weight is fixed at 0.5.
 
-Calculating the probability matrix $ p $. The formula for each element $ p_{ij} $ in $ p $ is as follows:
-\begin{equation}
-	p_{ij}=\frac{\widetilde{z}_{ij}}{\sum\limits_{i=1}^n{\widetilde{z}_{ij}}}
-\end{equation}
+\subsection{Results}
 
-We can easily verify that the probability sum corresponding to an indicator is 1.
+% 我们使用Task 1的投票估计结果，对34季301周数据进行反事实模拟分析。
+Using the vote estimates from Task~1, we conduct counterfactual simulation on
+301 weeks across all 34 seasons.
 
-For the $j^{th}$ indicator, the formula for calculating its information entropy is:
-\begin{equation}
-	e_{j}=-\frac{1}{\ln n} \sum_{i=1}^{n} p_{i j} \ln \left(p_{i j}\right)(j=1,2, \cdots, m)
-\end{equation}
+% 表格总结了反事实分析的整体结果。
+Table~\ref{tab:counterfactual-summary} summarizes the counterfactual analysis results.
 
-We define the information utility value as:
-\begin{equation}
-	d_j=1-e_j
-\end{equation}
-
-After normalizing the information utility values, we are able to obtain the entropy weight of each indicator:
-\begin{equation}
-	W_{Ej}=\frac{d_j}{\sum\limits_{j=1}^m{d_j}}(j=1,2,\cdots ,m)
-\end{equation}
-
-We applied the EWM to our data and obtained the weights of each subordinate indicator in its corresponding evaluation system, and the results are shown in the following table:
-
-\begin{minipage}{\textwidth}
-	\begin{minipage}[t]{0.45\textwidth}
-		\centering
-		\makeatletter\def\@captype{table}\makeatother\caption{The EWM's weights}
-		\renewcommand{\arraystretch}{0.9}
-		\begin{tabular}{|c|cc|}
-			\hline
-			\rowcolor[HTML]{B9C5E8} 
-			\multicolumn{1}{|l|}{\textbf{}} & \textbf{Indicator}                                              & \textbf{Weight}                                                           \\ \hline
-			\rowcolor[HTML]{F6F6F9} 
-			EO                             & \begin{tabular}[c]{@{}c@{}}MR\\ LF\end{tabular}                 & \begin{tabular}[c]{@{}c@{}}0.6239\\ 0.3761\end{tabular}                   \\ \hline
-			\rowcolor[HTML]{E4E6F0} 
-			STL                            & \begin{tabular}[c]{@{}c@{}}EI\\ RDP\\ NASJ\\ NSL\end{tabular}   & \begin{tabular}[c]{@{}c@{}}0.0110\\ 0.1622\\ 0.1124\\ 0.7144\end{tabular} \\ \hline
-			\rowcolor[HTML]{F6F6F9}
-			EL                             & \begin{tabular}[c]{@{}c@{}}GDPP\\ GDP\\ GDPG\end{tabular}        & \begin{tabular}[c]{@{}c@{}}0.0742\\ 0.2508\\ 0.6750\end{tabular}          \\ \hline
-			\rowcolor[HTML]{E4E6F0}
-			SR                             & \begin{tabular}[c]{@{}c@{}}AFA\\ NBIT\\ MSS\\ NCDR\end{tabular} & \begin{tabular}[c]{@{}c@{}}0.3484\\ 0.1410\\ 0.2644\\ 0.2462\end{tabular} \\ \hline
-		\end{tabular}
-	\end{minipage}
-	\begin{minipage}[t]{0.45\textwidth}
-		\centering
-		\makeatletter\def\@captype{table}\makeatother\caption{The AHP's weights}
-		\renewcommand{\arraystretch}{0.9}
-		\begin{tabular}{|c|cc|}
-			\hline
-			\rowcolor[HTML]{B9C5E8} 
-			\multicolumn{1}{|l|}{\textbf{}} & \textbf{Indicator}                                              & \textbf{Weight}                                                           \\ \hline
-			\rowcolor[HTML]{F6F6F9} 
-			EO                             & \begin{tabular}[c]{@{}c@{}}MR\\ LF\end{tabular}                 & \begin{tabular}[c]{@{}c@{}}0.5876\\ 0.4124\end{tabular}                   \\ \hline
-			\rowcolor[HTML]{E4E6F0} 
-			STL                            & \begin{tabular}[c]{@{}c@{}}EI\\ RDP\\ NASJ\\ NSL\end{tabular}   & \begin{tabular}[c]{@{}c@{}}0.1538\\ 0.3829\\ 0.2346\\ 0.2287\end{tabular} \\ \hline
-			\rowcolor[HTML]{F6F6F9}
-			EL                             & \begin{tabular}[c]{@{}c@{}}GDPP\\ GDP\\ GDPG\end{tabular}        & \begin{tabular}[c]{@{}c@{}}0.4632\\ 0.3825\\ 0.1543\end{tabular}          \\ \hline
-			\rowcolor[HTML]{E4E6F0}
-			SR                             & \begin{tabular}[c]{@{}c@{}}AFA\\ NBIT\\ MSS\\ NCDR\end{tabular} & \begin{tabular}[c]{@{}c@{}}0.4232\\ 0.2613\\ 0.2079\\ 0.1076\end{tabular} \\ \hline
-		\end{tabular}
-	\end{minipage}
-\end{minipage}
-\vspace{-0.4cm}
-
-
-
-\subsubsection{Determination of Weights by AHP}
-Similarly, we use each superior indicator and its subordinate secondary indicator as an evaluation system, then we use \textbf{AHP} to determine the weight $\omega _{Aj}$ of the $j^{th}$ indicator in each evaluation system\upcite{3}. After passing the consistency test, our results are shown in the table of the last page.
-
-In order to determine the \textbf{Fair possibility coefficient (FPC)}, we also use \textbf{AHP} to determine the weights of the four superior indicators. By combining those four factors by using AHP, we give the following judgment matrix:
-\begin{table}[H]
-	\centering
-	\setlength{\tabcolsep}{2pt}
-	\renewcommand{\arraystretch}{1.3}
-	\begin{tabular}{ll}
-		& \enspace SR STL EO EL \\
-		\begin{tabular}[c]{@{}l@{}} SR \\ STL\\ EO\\ EL\end{tabular} & 	$ \left(\begin{array}{cccc}
-			1 & 2 & 3 & 3 \\
-			\frac{1}{2} & 1 & \frac{3}{2} & 2 \\
-			\frac{1}{3} & \frac{2}{3} & 1 & 1 \\
-			\frac{1}{3} & \frac{1}{2} & 1 & 1
-		\end{array}\right) $          
-	\end{tabular}
+\begin{table}[htbp]
+\centering
+\caption{Counterfactual Analysis Summary}
+% 反事实分析汇总表
+\label{tab:counterfactual-summary}
+\begin{tabular}{lccc}
+\hline
+\textbf{Metric} & \textbf{Overall} & \textbf{Ranking} & \textbf{Percentage} \\
+\hline
+% 分析周数
+Weeks analyzed & 301 & 74 & 227 \\
+% 淘汰翻转次数
+Elimination flips & 66 & 0 & 66 \\
+% 淘汰翻转率
+Elimination Flip Rate & 21.9\% & 0.0\% & 29.1\% \\
+% 平均Kendall's τ
+Mean Kendall's $\tau$ & 0.828 & 0.703 & 0.868 \\
+% 平均Spearman's ρ
+Mean Spearman's $\rho$ & 0.897 & 0.785 & 0.934 \\
+\hline
+\end{tabular}
 \end{table}
 
-The results we obtained have passed the consistency test, and the weights vector of the superior indicators we obtained is:
-\begin{equation}
-	\omega _S=\left( 0.4582,0.2467,0.1527,0.1424 \right) 
-\end{equation}
-\subsubsection{Determination of Integrated Weights}
-We define that the weight of the $ j^{th} $ indicator in the evaluation system formed by each superior indicator and its subordinate secondary indicator is:
-\begin{equation}
-	\omega _j=\frac{\omega _{Ej}+\omega _{Aj}}{2}
-\end{equation}
+% 关键发现：排名法时期翻转率为0，百分比法时期约29%的周会产生不同淘汰结果。
+A striking finding is that all 66 elimination flips occurred during the
+Percentage Method era (Seasons 3--27).
+% 排名法时期（第1-2季和第28-34季）没有发生任何翻转。
+No flips occurred during the Ranking Method periods (Seasons 1--2 and 28--34).
 
-Ultimately, we derived the weight magnitude of each subordinate and superior indicator by calculation, which are shown in the following figure:
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=.6\textwidth]{quan2.png}
-	\caption{Pie chart of weights}
-	\label{img}
-\end{figure}
-\vspace{-0.4cm}
-\subsection{Establishment of FPC-GC Model}
-\subsubsection{Determination of Scores of Superior Indicators}
-We use \textbf{TOPSIS method} to determine the score of each superior indicator. Taking each superior indicator as an evaluation system, we suppose that there are $ n $ evaluation countries and $ m $ subordinate indicators in the evaluation system with matrix "$ Z $".
+% 表格展示了两种方法下的有效权重分析结果。
+Table~\ref{tab:weight-decomposition} presents the effective weight analysis,
+which directly addresses the question of method bias.
 
-We define the maximum value is:
-\begin{equation}
-	\begin{aligned}
-		Z^+ &= \left( Z_{1}^{+},Z_{2}^{+},\cdots ,Z_{m}^{+} \right) \\
-		& =\left( max\left\{ z_{11},z_{21},\cdots ,\left. z_{n1} \right\} \right. ,max\left\{ z_{12},z_{22},\cdots ,\left. z_{n2} \right\} \right. ,\cdots ,max\left\{ z_{1m},z_{2m},\cdots ,\left. z_{nm} \right\} \right. \right)
-	\end{aligned}
-\end{equation}
-
-We define the minimum value is:
-\begin{equation}
-	\begin{aligned}
-		Z^- &= \left( Z_{1}^{-},Z_{2}^{-},\cdots ,Z_{m}^{-} \right) \\
-		& =\left( min\left\{ z_{11},z_{21},\cdots ,\left. z_{n1} \right\} \right. ,min\left\{ z_{12},z_{22},\cdots ,\left. z_{n2} \right\} \right. ,\cdots ,min\left\{ z_{1m},z_{2m},\cdots ,\left. z_{nm} \right\} \right. \right)
-	\end{aligned}
-\end{equation}
-
-Define the distance of the $ i^{th} $ evaluation object from the maximum and minimum value are:
-\begin{equation}
-	D_{i}^{+}=\sqrt{\sum_{j=1}^m{\omega _j\left( Z_{j}^{+}-z_{ij} \right) ^2}}\quad , \quad D_{i}^{-}=\sqrt{\sum_{j=1}^m{\omega _j\left( Z_{j}^{-}-z_{ij} \right) ^2}}
-\end{equation}
-
-Then, we can calculate the unnormalized score of the $ i^{th} $ ($ i $=1,2,$ \cdots $,$ n $) evaluation object:
-\begin{equation}
-	S_i=\frac{D_{i}^{-}}{D_{i}^{+}+D_{i}^{-}}
-\end{equation}
-
-We can normalize the score:
-
-\begin{equation}
-	\widetilde{S}_i=\frac{S_i}{\sum\limits_{i=1}^n{S_i}} 
-\end{equation}
-
-In this case, \quad $ \sum\limits_{i=1}^n{\widetilde{S}_i}=1 $.
-We further define the score vector for the four superior indicators for country $ i $ as:
-\begin{equation}
-	S=\left( S_{SRi},S_{STLi},S_{EOi},S_{ELi} \right) 
-\end{equation}
-
-We can then calculate the value of the final FPC for country $ i $:
-\begin{equation}
-	FPC=\left( S_{SRi},S_{STLi},S_{EOi},S_{ELi} \right) \cdot {\omega _S}^T
-\end{equation}
-
-Then we rank the countries according to the size of the FPC and plot the Lorenz curve of FPC distribution by country. By using the curve and the corresponding formula, we can calculate the corresponding \textbf{Gini Coefficient (GC)}. Finally by analyzing the Gini Coefficient and the Lorenz curve, we can measure global equity.
-
-\subsection{Application of FPC-GC Model}
-We applied the \textbf{FPC-GC model} to our data. Through calculations, we obtained the corresponding FPC values for the 25 countries involved in the evaluation. Then we plot the corresponding heat map:
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=11cm, height=5cm]{3cai.png}
-	\caption{Heat map}
-	\label{img}
-\end{figure}
-\vspace{-0.6cm}
-Through the information reflected in the picture, the U.S. has the highest FPC, meanwhile, Russia and China are closely following. At the same time, European countries, Australia and Japan as well as Korea are in the middle. Brazil and Argentina in South America are lagging behind relatively.
-
-"Lorenz curve is a curve used in economics to analyze the fairness of social income distribution or property distribution, and Gini Coefficient is a statistical indicator reflecting the fairness of social income distribution based on the calculated Lorenz curve\upcite{4}". In short, by rationalizing the Lorenz curve and Gini Coefficient slightly and applying them to our model, we can measure the global equity of the current allocation of the world on the asteroid mining problem.
-We are going to plot the Lorenz curve of FPC distribution by country and calculate its corresponding Gini Coefficient.
-
-We have $ n $ countries participating in the evaluation, and after ascending order, the FPC of the $ i^{th} $ country is 23, then the coordinates of the $ k^{th} $ point on the Lorenz curve are\upcite{5}:
-\begin{equation}
-	\begin{cases}
-		x=\frac{k}{n}\\
-		\\
-		y=\frac{\sum\limits_{i=1}^k{FPC_i}}{\sum\limits_{i=1}^n{FPC_i}}\\
-	\end{cases}
-\end{equation}
-
-By the method described above, we plotted the Lorenz curve as shown below:
-\vspace{-0.2cm}
-\begin{figure}[H]     %固定，容易留白，但可能串段
-	\centering
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=7cm]{lan1.png}
-		\caption{Lorenz curve}
-	\end{minipage}
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=7cm]{lan2.png}
-		\caption{Gini Coefficient diagram}
-	\end{minipage}
-\end{figure}
-\vspace{-0.4cm}
-In the left figure, the green dashed line represents the theoretical fairness curve. When the Lorenz curve overlaps completely with the theoretical fairness curve, it means that the evaluation object is absolutely fair. The farther the Lorenz curve is from the theoretical fairness curve, the higher its curvature is, and the corresponding evaluation object is less global equity.
-
-According to the Lorenz curve, we can calculate the corresponding Gini Coefficient of the system, as shown in the figure on the right, A and B represent the area of two closed graphs in the plane of the curve, and we define the \textbf{Gini Coefficient}:
-\begin{equation}
-	GC=\frac{A}{A+B}
-\end{equation}
-\vspace{-0.2cm}
-By reviewing the literature\upcite{6}, it is clear that:  
-\begin{itemize}
-	\setlength{\parsep}{0ex} %段落间距
-	\setlength{\topsep}{2ex} %列表到上下文的垂直距离
-	\setlength{\itemsep}{1ex} %条目间距
-	\item $ GC< $ 0.3: best fair state
-	\item 0.3 $ <GC< $  0.4: normal fair state
-	\item $ GC> $ 0.4: alert fair state
-	\item $ GC> $ 0.6: highly dangerous fair state
-\end{itemize}
-Based on the geometric definition of the Gini Coefficient, we can express the $ GC $ as:
-\begin{equation}
-	GC=1-\frac{1}{n}\sum\limits_{k=0}^{n-1}{\frac{\text{(}2\sum\limits_{i=1}^k{FPC_i}\text{)}+FPC_{k+1}}{\sum\limits_{i=1}^n{FPC_i}}}
-\end{equation}
-
-Importing our data into Matlab, after calculation we obtain: \textbf{$ \textbf{GC=} $0.2277$ \textbf{<} $0.3}.
-
-Therefore, we can consider that in the current world situation, the issue of asteroid mining is currently in a state of global equity.
-
-\section{Models to Predict Future Impacts}
-Asteroid mining is globally equitable at present. But in the near future, such equities are likely to be broken.
-\subsection{Obstacles to Asteroid Mining}
-The asteroid mining industry is not yet fully developed mainly because of the following two constraints:
-\begin{itemize}
-	\setlength{\itemsep}{1ex} %条目间距
-	\item \textbf{Constraints of technical and economic}:
-	A country that wants to conduct asteroid mining needs to overcome the technological constraints of spacecraft launch, space transportation, and resource capture, as well as space station establishment, the realization of thess would be difficult for most countries\upcite{7}.
-	\item \textbf{Constrains of regulations}:
-    The Outer Space Treaty sets out the basic principles for the development and use of outer space, including that "the exploration and use of outer space resources must be aimed at the benefit of all mankind" as well as that "the development and use of outer space should be open to all countries”\upcite{9}. Also the 1979 Moon Agreement, states that "The Moon and its natural resources are the common heritage of all mankind"\upcite{8}.
-    These legal treaties, which are based on the common good of mankind, restrict the mining activities of some major powers.
-\end{itemize}
-\subsection{Strategic Significance of Planetary Mining}
-Planetary mining is of strategic importance on three dimensions:
-\begin{enumerate}
-	\item \textbf{Strategic economic needs}:
-	Outer space is rich in resources, and if it can be exploited, it will bring enormous economic and social value.
-	\item \textbf{Strategic technical needs}:
-	The development of outer space resources can be used for both civilian and military purposes, and if base construction, deep space exploration and celestial defense activities are carried out on other planets, then this issue will affect the security interests of the country. 
-	\item \textbf{Strategic political needs}:
-    After all, outer space resources are finite, and countries are in competition with each other, as the countries with mature technology first will restrict the participation of later countries in asteroid mining.
-\end{enumerate}
-
-\subsection{Analysis of Future Vision}
-With the development of space technology by major powers, the current equitable situation may be broken. Under the drive of strategic significance and economic value, some countries will ignore international rules and grab resources, which will undermine global equity.
-
-\begin{itemize}
-	\setlength{\itemsep}{1ex} %条目间距
-	\item \textbf{Resource monopoly issues}:
-    Due to the difference in technological power among countries, the major powers will have an absolute advantage in asteroid mining. Even some countries have provided the legal basis for private entities to conduct asteroid mining, giving them various powers over asteroid mining\upcite{10}. The commercialization and privatization of asteroid mining is an inevitable trend. However, the great powers will monopolize the economic benefits of asteroid mining by means of their great power\upcite{11}.The countries with weaker space technology can only compromise with the major powers if they want to enjoy the benefits of outer space resource development.
-	\item \textbf{Military activities issues}:
-    Because of the strategic technological importance of asteroid mining, every country will take military applications into consideration when conducts outer space activities\upcite{12}. 
-    But the military applications of outer space are inevitable and necessary in order to enhance the defense capabilities of the earth. \upcite{13}. This will likely result in the great powers being able to greatly enhance their military power in resource exploitation. In turn, this would further increase the deterrent power of the major powers in the world, while other countries would be powerless to restrain the behavior of these major powers, thus they completely losing the right to decide on asteroid mining.
-\end{itemize}
-
-In summary, both the commercialization and privatization of asteroid mining as well as the ensuing issue of military activities will result in a monopoly of the asteroid mining industry by the major powers. This will gravely harm global equity.
-
-\subsection{Establish Future Impact Forecast (FIF) Model}
-In order to study the impact of the above issues on global equity, we need to develop a model to describe a possible vision of how asteroid mining might look like in the future. And the model should satisfy the following conditions:
-\begin{itemize}
-	\item The model needs to consider the impact of various current factors, such as the difference in power between countries and the impact of currently existing policies on the future vision of asteroid mining.
-	\item The model needs to be highly adaptable and universal, and it can respond quickly to unknown impacts that may occur in the future, like new treaties for global equity, etc.
-	\item The model's predicted results for the future vision need to be similar to the results of our previous analysis.
-\end{itemize}
-
-We define this model as the \textbf{FIF model}.
-\subsubsection{Classification of Countries}
-In the future, countries whose space technology is advanced will have a great advantage in asteroid mining activities. In order to define which countries are advanced in space technology and which countries' space technology is not mature or even lagging behind, we need to conduct a \textbf{Cluster Analysis} of countries, because FPC integrates a country's technological leadership and international responsibility, so we believe that FPC can be used as a measure for a country's maturity of aerospace technology. We use FPC as a reference to \textbf{Hierarchically cluster} countries, and substitute our data into SPSS for cluster analysis to obtain the elbow diagram shown below:
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=.6\textwidth]{zhou2.png}
-	\caption{Elbow diagram}
-	\label{img}
-\end{figure}
-\vspace{-0.4cm}
-By observing the elbow diagram, we can know that the degree of distortion decreases significantly when the number of clusters reaches 2. Therefore, we determine the number of clusters to be 2, whereby the final clustering scheme obtained is shown in the following heat and spectral diagrams:
-\begin{figure}[H]     %固定，容易留白，但可能串段
-	\centering
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=8.5cm,height=6cm]{3lia.png}
-		\caption{Classification heat map}
-	\end{minipage}
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=6cm,height=6cm]{4pu.png}
-		\caption{Classification spectral chart}
-	\end{minipage}
-\end{figure}
-\vspace{-0.4cm}
-As we can see from the figure, we can classify the three superpowers - the United States, China, and Russia - into one category, while the other countries are in the second category. In the future, these three countries are likely to have a monopoly in the field of asteroid mining.\\
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=.6\textwidth]{cartoon.png}
-	\caption{First class VS Second class}
-	\label{img}
-\end{figure}
-\vspace{-0.4cm}
-Thus, we can define countries into two classes:
-\begin{itemize}
-	\item \textbf{First class}: countries that are the prominent leaders in the field of asteroid mining, they are the United States, China and Russia.
-	\item \textbf{Second class}: countries that are at a disadvantage in the field of asteroid mining, i.e. countries other than the above three countries.
-\end{itemize}
-\subsubsection{Future Impact Prediction Model Based on Differential Equations}
-There is not only competition but also interdependence between the two classes of countries on the issue of asteroid mining. In the second class countries the labor is cheaper and the first class countries like the US will set up their factories in these countries and let the second class countries produce as agents, which is beneficial for both countries. Thus, the strong countries can lower their production costs and gain more profits, while the people of the agent countries will gain more jobs and achieve economic development of their countries because of the existence of these factories and enterprises. 
-
-In the competition of energy, the first class countries will go to trade with other countries for the sake of protecting the local energy and environment. By importing energy from other countries, they can protect their environmental, but such a policy will increase the cost of energy. In constrain, for the trafficking countries, although they gain certain economic benefits, they also make the environmental resources suffer certain damage. And both economic and environmental resources can affect a country's FPC.
-
-Referring to the population competition model, we define the comprehensive competitiveness of the first class countries in the asteroid mining problem as $ c_1 $ and the comprehensive competitiveness of the second class countries in the asteroid mining problem as $ c_2 $, $ c_1 $ and $ c_2 $ satisfying the following differential equations:
-\begin{equation}
-	\begin{cases}
-		\frac{dc_1}{dt}=v_1c_1\left( 1-\frac{c_1}{L_1}-\alpha _1\frac{c_2}{L_2}+\beta _1\frac{c_2}{L_2} \right)\\
-\\
-		\frac{dc_2}{dt}=v_2c_2\left( 1-\frac{c_2}{L_2}-\alpha _2\frac{c_1}{L_1}+\beta _2\frac{c_1}{L_1} \right)\\
-	\end{cases}
-\end{equation}
-
-In the above equations, $ v_1 $ and $ v_2 $ denote the natural growth rate of the comprehensive competitiveness of the two classes of countries respectively. $ L_1 $ and $ L_2 $ denote the maximum competitiveness of the two classes of countries under current conditions. $ \alpha _1 $ and $ \alpha _2 $ denote the relative dependence of the other country on its own environment and resources. And $ \beta _1 $ and $ \beta _2 $ denote a combined factor of the other country's dependence on this country in the development process, for example, the economic benefits generated by the environment and resources of this country, the scientific and technological sharing of space technology provided by this country and the dependence on the benefit sharing in asteroid mining through this country. Hence the variables $ v $ and $ \beta $ contribute to the comprehensive competitiveness of the country, while $ \alpha $ does not contribute to the comprehensive competitiveness of the country. The value of $ L $ needs to be determined on the country's own conditions, moreover we assume that both $ \alpha $ and $ \beta $ are measured independently.
-
-\subsection{Application of FIF Model}
-We assign values to the parameters of the differential equations with references to the present realistic conditions.
-
-By calculating the average FPC of the two classes of countries, we can determine the initial competitiveness of the two classes of countries, the natural growth rate of the first class is smaller because they are at a high level in all aspects. The second class of countries has a higher development potential, so their natural growth rate is faster. By referring to the average of GDP growth rates of the two types of countries, we can determine the average size of $ v $.
-
-With the same principle, we can determine that $ L_1 $ is equal to 1.7 times the initial competitiveness, while $ L_2 $ is equal to 3.4 times the initial competitiveness, then the parameters we were able to determine are shown in the table below:
-\begin{table}[H]
-	\centering
-	\caption{Determined parameter}
-	\setlength{\tabcolsep}{10pt}
-	\renewcommand{\arraystretch}{1.1}
-	\begin{tabular}{|c|c|c|c|c|c|c|}
-		\hline
-		parameter & $ v_1 $  & $ v_2 $  & $ L_1 $  & $ L_2 $  & $ c_2 $(0)     & $ c_2 $(0)     \\ \hline
-		value     & 0.060 & 0.080 & 1.462 & 1.088 & 0.860 & 0.320 \\ \hline
-	\end{tabular}
+\begin{table}[htbp]
+\centering
+\caption{Effective Weight Analysis}
+% 有效权重分析表
+\label{tab:weight-decomposition}
+\begin{tabular}{lcc}
+\hline
+\textbf{Metric} & \textbf{Ranking Method} & \textbf{Percentage Method} \\
+\hline
+% 评委有效权重
+Judge effective weight & 48.2\% & 22.9\% \\
+% 观众有效权重
+Audience effective weight & 51.8\% & 77.1\% \\
+% 观众权重>50%的周数占比
+Weeks with audience weight $>$50\% & $\sim$50\% & 93.4\% \\
+\hline
+\end{tabular}
 \end{table}
-Since the first class countries attach great importance to the protection of environmental resources, so we set $ \alpha _1= $ 0.2. In contrast, the first class countries are able to obtain high benefits through cheap labor, and the benefits they get from cheap labor are very high, considering the rising trend of labor costs,  we set $ \beta _1 $ to be 2 and 1.5 respectively. Some second class countries are still willing to sacrifice the environment for their benefits, considering the importance of the environment, we set $ \alpha _2 $ to be 1.5 and 2 respectively. In order to consolidate their position, the first class countries will curb the development of the second class countries, so we set $ \beta _2=$ 0.6, In order to consolidate their position, the first class countries will curb the development of the second class countries.
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=.5\textwidth]{jzl.png}
-	\caption{Changes of competitiveness in the current situation}
-	\label{img}
-\end{figure}
-It can be seen from the figure that in either case, the competitiveness of the first class countries will far exceed that of the second class countries in the next 50 years.
 
-According to the prediction results of the FIF model, we take the final average \textbf{FPC$ = $0.158} for the first class countries, and the final average \textbf{FPC$ = $0.045} for the second class countries, since the future development of a country is difficult to predict, we randomly generate data that meets the above conditions and substitute the data into the FPC-GC model:
-\begin{figure}[H]     %固定，容易留白，但可能串段
-	\centering
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=7cm]{lan3.png}
-		\caption{Variation of Lorenz curve}
-	\end{minipage}
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=7cm]{lan4.png}
-		\caption{Area map and GC}
-	\end{minipage}
-\end{figure}
-It can be seen from the figure that the bending degree of the future Lorentz curve will become larger, \textbf{GC will increase to 0.4423}, the global equity will be on alert, The first class countries are likely to monopolize the asteroid mining industry, and their economic power and military power will be significantly improved; Although other countries can obtain some benefits and the sharing of space technology through monopoly countries, they will always be at a disadvantage, and it will be difficult for them to develop further, the global equity will be greatly damaged.
-\section{Analysis of the Impact at Global Equity After Conditions Changed by Using the FIF Mode}
-In the FIF model, various realistic factors influence the parameters of our differential equations. Therefore, if we want to study the effect of changing conditions on global equity, we only need to change the parameters of the differential equations. Considering that parameters such as $ L $ and $ v $ are determined by the country's own conditions and attributes, we study this issue by changing $ \alpha $ and $ \beta $, and the practical significance of parameter changes is the impact of international treaties and pressures on the country. We will start our exploration with the different attitudes of the first class countries towards future treaties.
-\begin{itemize}
-	\setlength{\itemsep}{1ex} %条目间距
-	\item \textbf {Willing to share and provide technical support and policy benefits}\\
-	When the first class countries are willing to share their resources and benefits to other countries, the dependence of other countries on their resources will increase, but considering the principle of protecting the environment and resources and the effect of implementing the policy, we take $ \alpha _1 $ as 0.5 and 0.8 respectively, so as to analyze the change of comprehensive competitiveness when this country has different willingness to open up. Since the first class countries has implemented economic preferential policies, then it has to sacrifice some of its economic benefits, thus there will be some decline in economic efficiency. Therefore, we take $ \beta _1= $1.5. 
-	In this case, both $ \alpha _2 $ and $ \beta _2 $ increase for the second class countries receive resource sharing and economic preferences from the first class countries. We also consider the development constraints of the first class countries on the second class countries
-	by respectively taking $ \alpha _2= $0.7 and $ \beta _2 $ as 1 and 0.8. After substituting the data into the differential equation of the FIF, we get the following figure:
-\vspace{-0.4cm}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=.5\textwidth]{c1.png}
-		\caption{Change in competitiveness of the first case}
-		\label{img}
-	\end{figure}
-\vspace{-0.4cm}
-From the figure, we can see that the comprehensive competitiveness of both two classes of countries will increase. Although the gap between their competitiveness will still widen in the end, it has slowed down the situation of monopoly in the issue of asteroid mining. And we can see that when the $ \beta _2 $ decreases due to a higher degree of resource sharing by major powers who want to limit the development of weaker countries, the final comprehensive competitiveness of both classes of countries is less than that of the former. In this case, although the final competitiveness gap between the two classes of countries still becomes larger, the change is no longer so big, which will conduct the global equity, and the comprehensive competitiveness of each country will be improved. Therefore, from the perspective of global development and maintenance of global equity, we do not recommend that the first class countries take restrictions or deliberately increase the degree of resource sharing.
-	\item \textbf {Provide economic and scientific support without opening up resource sharing}\\
-	In this case, the first class countries pay more attention to the protection of their own resources and environment, so they are not willing to open up the environmental resources sharing, we don't change the value of $ \alpha _1 $ (which is 0.2). We take $ \beta _1 $ as 1.5 and 1.3 to simulate the comprehensive competitiveness of the countries with different implementation of technology and economic support policies. Because the first class countries provide technological and economic support, the second class countries will sacrifice some of their own benefits. Therefore, the comprehensive development factor $ \beta _1 $ will decline.
-	Based on the principles of sustainable development and environmental protection, the first class of countries may be less dependent on the resources from other countries. Meanwhile, considering that the human environment varies from one major power to another, we take $ \alpha _2 $ as 1 and 0.8 to simulate different realistic situations respectively. And the economic policy dividend and social development will increase $ \beta _2 $, so in this case we take $ \beta _2 $ as 1.2.
-	By substituting the data into the differential equation of the FIF, we get the following results:
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=.5\textwidth]{c2.png}
-		\caption{Change in competitiveness of the second case}
-		\label{img}
-	\end{figure}
-\vspace{-0.4cm}
-    As can be seen from the figure, in this case, the comprehensive competitiveness of both types of countries eventually improved, which likewise avoids the creation of a resource monopoly situation in the field of asteroid mining. What surprises us is that when the first class countries are willing to sacrifice more economic benefits to support the space technology and economic development of the second class countries, which means that the first class countries have a higher human environment score and is less dependent on the resources of the second class countries, both classes of countries eventually have a higher comprehensive competitiveness than the original one, which is a mutually beneficial result. Therefore, we propose that if each country of the first class transfer part of its development benefits to the second class, both of them can obtain better development as well as the global equity on asteroid mining can be guaranteed.
-\end{itemize}
-\section{Policy and Schedule}
-%\subsection{Correlation Analysis of Influencing Factors}
-%The fact that only the major powers currently have the technology to go into outer space for exploration gives these powers the ability to operate in outer space with impunity and compete for asteroid mining resources.\upcite{14}. 
-%The results of our model show that outer space has the tendency to be monopolized by these few major powers. 
+% 权重分解回答了核心问题：哪种方法更偏向观众？
+The weight decomposition directly answers the core question: \textbf{which method
+favors fan votes more?}
+% 百分比法下观众有效权重平均达到77.1%，远高于排名法的51.8%。
+Under the Percentage Method, the effective audience weight averages 77.1\%,
+substantially exceeding the Ranking Method's 51.8\%.
+% 93.4%的周次中，百分比法给予观众超过50%的权重。
+In 93.4\% of weeks, the Percentage Method assigns more than half the effective
+weight to audience votes.
 
-%Out of the intention to promote global equity, we need to increase the FPC value of some countries so that the gap in comprehensive competitiveness among individual countries is not too big. At the same time, in order to ensure that all countries can benefit from asteroid mining, we need to maintain the Gini index at a stable value over time. Furthermore, since there is a large correlation between the indicators we selected, we considered altering some of them to achieve our purpose. 
+% 这个结论可能与直觉相反。
+This finding may seem counterintuitive.
+% 解释：百分比法的有效权重取决于分数分布的方差。
+The explanation lies in variance: the Percentage Method's effective weights
+depend on the dispersion of scores.
+% 当投票分布比评委分数更分散时，投票对综合得分的影响更大。
+When vote distributions are more dispersed than judge scores---as is typically
+the case with our estimates---votes dominate the combined score.
 
-%We can see that most of the indicators are mostly strongly correlated with each other, and with this as a reference, we can make more targeted suggestions for policies.
-\subsection{Amendments of Existing Treaties}
-As early as 1963, the United Nations General Assembly adopted the Outer Space Treaty, and in the following decade, various treaties on outer space were concluded in order to guarantee the equity of the interests of all mankind in outer space, but as mankind began to explore resources in outer space, various problems in these treaties began to emerge. If we want to maintain global equity, we need to update and improve these original treaties, and we will provide improved views on some of the treaties of outer space law below:
+\subsection{Conclusion: The Percentage Method Favors Fan Votes}
+
+% 基于以上分析，我们得出明确结论：
+Based on our analysis, we reach a clear conclusion:
+
+% 百分比法更偏向观众投票。
+\textbf{The Percentage Method favors fan votes more than the Ranking Method.}
+
+% 证据如下：
+The evidence is threefold:
 \begin{enumerate}
-	\item The Outer Space Treaty, as a document of principle, does not have a high degree of enforceability. So we suggest that the UN could work to turn it into an enforceable treaty, calling on member states to impose severe sanctions on countries who violate it.
-	\item The Outer Space Treaty requires all States parties to use the Moon and other celestial bodies for peaceful purposes by prohibiting military activities on them, but on the other hand it does not restrict access to space by military personnel. Therefore, the definition of the term "peaceful" is highly controversial among countries. So we suggest that the United Nations should further clarify the definition of peace and the extent of restrictions on military activities.
-	\item The main content of the Registration Convention is to require countries to register the launched outer space objects with the United Nations. So that the United Nations and the rest of the world are aware of the launch of the space objects of each country.Therefore, the United Nations needs to strengthen its efforts to scrutinize the compliance of countries with the Registration Convention and avoid the selfish launch of spacecraft by certain countries who want to occupy space resources. 
-	\item The Moon is the closest celestial body to Earth, which is rich in mineral resources. The Moon Agreement defines the Moon as the "common property of all mankind". However, this treaty did not enlist as much support as other treaties because it conflicted with the interests of certain countries. In order to make this treaty more widely supported and to balance the interests of the various Allied Powers for the benefit of all nations. We recommend that the UN revise the Moon Agreement from the perspective of outer space commercialization and lunar environmental protection.
+    % 证据1：有效权重
+    \item \textbf{Effective weights}: The Percentage Method assigns 77.1\% effective
+    weight to audience votes, compared to 51.8\% under the Ranking Method.
+    % 证据2：翻转模式
+    \item \textbf{Flip patterns}: All 66 elimination flips occurred during the
+    Percentage Method era, suggesting this method is more susceptible to vote
+    fluctuations overriding judge preferences.
+    % 证据3：争议案例
+    \item \textbf{Controversy cases}: Notable controversies (Bobby Bones in Season 27,
+    Bristol Palin in Season 11) all occurred during the Percentage Method era,
+    where high fan support could overcome low judge scores.
 \end{enumerate}
-\subsection{Conclusion of New Treaties}
-As mankind further accelerates its march into space. If only to amend on the basis of the original treaty, it will still leave a lot of legal gaps. So, it is important to allocate the finite resources efficiently and maintain the order of competition among countries.  In this case, the UN should conclude a new treaty to deepen international practice and international cooperation in the asteroid mining industry.
-\begin{enumerate}
-	\item In view of the current level of spaceflight, only some countries have access to outer space for a relatively long time to come. Therefore, we suggest that the UN should urge the first class countries to lift part of their technology blockade and transfer some technology to the second class countries, so as to enhance global equity.
-	\item Some countries give up mining ores from their own countries and import them from other countries in order to secure their energy reserves. This move has significantly worsened the environment in exporting countries. Therefore, we suggest that the UN urges the importing countries to open up their mineral resources appropriately, besides allocating the resources available to each country in the asteroid mining.
-	\item With the development of asteroid mining industry, some junk will be left behind in space. This will greatly harm the space environment, so we propose that the UN promote the environmental protection treaty for outer space, which requires every country who goes into outer space to take responsibility for cleaning up space junk.
-	\item At present, the commercialization of the asteroid mining industry is already an inevitable trend. In order to prevent some countries from taking advantage of reaching space first to make undue profits and make global equity suffered. We suggest that the UN promotes the conclusion of a treaty on the regulation of space commerce, limiting the maximum amount of mining by certain countries and regulating the relevant market behavior.
-\end{enumerate}
-\subsection{Target Schedule}
-Based on our various views on asteroid mining and recommendations for policy, we propose the following \textbf{target timeline} for the international community:
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=14cm, height=5cm]{nian.png}
-	\caption{Target schedule}
-	\label{img}
-\end{figure}
-\vspace{-0.4cm}
-Earth's environment has been severely damaged at present, and we hope that we can improve Earth's enviroment greatly by developing the asteroid mining industry around 2050. At the same time, we hope that we can maintain the stability of the Gini Coefficient and basically reach global equity around 2070.
-\newpage
-\section{Sensitivity Analysis of the Model}
-In measuring global equity, we determined the country's FPC by assigning weights to the four superior indicators to plot the Lorenz curve and calculate the GC. In order to test the reliability of our model's results, we partially shifted the weight of the indicator with the largest weight to the indicator with the smallest weight and observe the change in the Lorenz curve:
-\begin{figure}[H]     %固定，容易留白，但可能串段
-	\centering
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=8cm]{ling1.png}
-	\end{minipage}
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=8cm]{ling2.png}
-	\end{minipage}
-    \caption{Sensitivity analysis}
-\end{figure}
-We can see that the Lorenz curve hardly changes after changing the weights, and only when we zoom in on the picture that the changes can be seen clearly. So the changes are very subtle. While the Lorenz curve gradually moves away from the theoretical fairness curve, the GC becomes larger, but its change is small, so we believe the results are reliable and the model is robust.
-%8
-\section{Model Evaluation and Further Discussion}
-\subsection{Strengths}
-Our research has following strengths:
-\begin{enumerate}
-	\item We used both AHP and EWM methods to determine the weights, which minimize the errors caused by subjectivity and the problems of the data itself.
-	\item The data used in the model are from official websites and official journals to ensure the reliability of the results, and the findings are highly informative to the United Nations for policy formulation.
-	\item The model is highly scalable. In measuring global equity and studying its changes, we considered a variety of factors and we can make a good assessment and prediction of global equity and its changes by simply providing relevant data.
-	\item We use the Gini Coefficient to measure global equity, which makes our model highly scalable and can also be used to measure other equity issues between countries.
-\end{enumerate}
-\subsection{Weaknesses}
-\begin{enumerate}
-	\item The indicators we considered are not particularly complete. Because the issue of global equity in asteroid mining is complex, it involves political, economic, and technological aspects. It would be extremely difficult to examine all of them. If time permits, we can consider more indicators.
-	\item It takes a long time for a policy to be implemented effectively, and it may be interfered by many factors. Therefore, it is difficult to apply the theoretical model to realistic situations.
-	\item When processing the data, we introduced some errors into the model when rounding the number of decimal places, and such errors may cause a relatively large perturbation in the final results.
-\end{enumerate}
-\subsection{Further Discussion}
-The premise of changing the parameters of our differential equation is that countries have strong enforcement power for new international treaties, but in reality, this condition is difficult to achieve.In the future, we can refer to the opinions of more experts and add more indicators and parameters to make our model's result be more accurate.
+
+% 这解释了为什么节目在第28季后回归排名法。
+This explains why the show returned to the Ranking Method starting in Season 28:
+% 制作方希望恢复评委与观众之间的平衡。
+producers sought to restore balance between judges and audience influence.
+
+% 这些发现将为Task 3的争议案例分析提供分析框架。
+These findings provide the analytical framework for examining specific
+controversy cases in Task~3.
 
 
-The global equity of asteroid mining is closely related to the future development of humanity, and our model has told us that powerful countries must take more responsibility, fulfill more obligations, and promote common global development, only then can we have a more peaceful future and asteroid mining can truly benefit humanity.
-
-%\begin{table}[H]
-%	\caption{Change makers in every genre}
-%	\setlength{\tabcolsep}{11mm}{
-%		\begin{tabular}{|c|c|c|c|c|}
-%			\cline{1-2} \cline{4-5}
-%			& p value &  &     & p value \\ \cline{1-2} \cline{4-5} 
-%			GDP  & 0.849   &  & ED  & 0.693   \\ \cline{1-2} \cline{4-5} 
-%			GDPG & 0.245   &  & NoE & 0.252   \\ \cline{1-2} \cline{4-5} 
-%			Pop  & 0.056   &  & RC  & 0.636   \\ \cline{1-2} \cline{4-5} 
-%			PCDI & 0.971   &  & FA  & 0.979   \\ \cline{1-2} \cline{4-5} 
-%	\end{tabular}}
-%\end{table}
-
-
-%\begin{minipage}{\textwidth}
-%	\begin{minipage}[t]{0.45\textwidth}
-%		\centering
-%		\makeatletter\def\@captype{table}\makeatother\caption{$ p $-values corresponding \\ \centerline{to the first 4 factors}}
-%		\begin{tabular}{|c|c|}
-%				\hline
-%				%\rowcolor[HTML]{E2EFDA} 
-%				   & $ p $-value \\ \hline
-%				GDP  & 0.849   \\ \hline
-%				GDPG & 0.245   \\ \hline
-%				Pop  & 0.056   \\ \hline
-%				PCDI & 0.971   \\ \hline
-%		\end{tabular}
-%	\end{minipage}
-%	\begin{minipage}[t]{0.45\textwidth}
-%		\centering
-%		\makeatletter\def\@captype{table}\makeatother\caption{$ p $-values corresponding \\ \centerline{to the last 4 factors}}    
-%		\begin{tabular}{|c|c|}
-%				\hline
-%				%\rowcolor[HTML]{E2EFDA} 
-%				& $ p $-value \\ \hline
-%				ED  & 0.693   \\ \hline
-%				NoE & 0.252   \\ \hline
-%				RC  & 0.636   \\ \hline
-%				FA  & 0.979   \\ \hline
-%		\end{tabular}
-%	\end{minipage}
-%\end{minipage}
-
-
-
-
-
-
-%The influence of nodes in the network has been studied for a long time. Many scholars such as singla and Goyal\upcite{1} define the influence as the similarity and correlation between nodes. However, based on the data given in influence date, we can not understand the similarity between artists. The only similarity is whether these artists belong to the same school, that is, whether these nodes belong to the same community. Therefore, we introduce the twitterrank model proposed by Jianshu Weng:
-
-
-
-%\begin{table}[H]
-%	\centering
-%	\caption{Characteristics of each genre}
-%	\begin{tabular}{|c|c|c|}
-%		\hline
-%		Genre           & \multicolumn{2}{c|}{Characteristic} \\ \hline
-%		Pop/Rock        & energy           & valence          \\ \hline
-%		Vocal           & danceability     & acousticness     \\ \hline
-%		International   & valence          & acousticness     \\ \hline
-%		R\&B            & valence          & key              \\ \hline
-%		Jazz            & acousticness     & instrumentalness \\ \hline
-%		Comedy/Spoken   & speechiness      & explicit         \\ \hline
-%		Latin           & energy           & valence          \\ \hline
-%		Country         & valence          & mode             \\ \hline
-%		Blues           & energy           & valence          \\ \hline
-%		Children's      & danceability     & instrumentalness \\ \hline
-%		Electronic      & instrumentalness & duration         \\ \hline
-%		Classical       & instrumentalness & explicit         \\ \hline
-%		Stage \& Screen & acousticness     & instrumentalness \\ \hline
-%		Folk            & key              & acousticness     \\ \hline
-%		Avant-Garde     & loudness         & instrumentalness \\ \hline
-%		Religious       & energy           & tempo            \\ \hline
-%		Reggae          & mode             & instrumentalness \\ \hline
-%		New Age         & instrumentalness & duration         \\ \hline
-%		Easy Listening  & loudness         & instrumentalness \\ \hline
-%	\end{tabular}
-%\end{table}
-%
-%
-%\begin{table}[H]
-%    \centering
-%    \caption{the table of influence and simarity}
-%    \begin{tabular}{lcc}
-%    \hline
-%    \hline
-%                                          & \textbf{influence} & \textbf{simarity}           \\ \hline
-%    \textbf{The Beatles}                  & 0.7864             & 0.8429                      \\
-%    \textbf{John McLaughlin}              & 0.6794             & 0.7627                      \\
-%    \textbf{Miles Davis}                  & 0.4376            & -0.3557 \\
-%    \textbf{Jimi Hendrix}                 & 0.3467            & 0.2738                      \\
-%    \textbf{Jim Hall}                     & 0.2467             & -0.1849 \\
-%    \textbf{Julian Bream}                 & 0.1349            & 0.0705                      \\ \hline
-%    \hline
-%    \end{tabular}
-%\end{table}
-%
-%
-%
-%
-%
-%
-%\begin{table}[H]
-%    \centering 
-%    \caption{Similarity and influence of some Folk genre artists}
-%    \begin{tabular}{ccc}
-%    \hline
-%    \hline
-%    \multicolumn{1}{c|}{Name}                       & \multicolumn{1}{l}{simarity} & influence \\ \hline
-%    \multicolumn{1}{c|}{The Kingston Trio}     & 0.948                        & 8.96      \\
-%    \multicolumn{1}{c|}{Ramblin' Jack Elliott} & 0.903                        & 10.2      \\
-%    \multicolumn{1}{c|}{John Fahey}            & 0.877                        & 9.31      \\
-%    \multicolumn{1}{c|}{Joan Baez}             & 0.702                        & 15.5      \\
-%    \multicolumn{1}{c|}{Dave Van Ronk}         & 0.852                        & 9.74      \\ \hline
-%    \hline
-%    \end{tabular}
-%\end{table}
-
-
-
-%The history of the development of the Folk genre\upcite{2}.
-% shows that in the 1960s, Joan Baez combined the Folk genre with the Rock genre, introducing rock instruments such as the guitar to the Folk genre, thus driving a significant increase in the Folk genre's instrumentalness characteristics, further supporting our speculation.
-
-%We used the same method to filter out other genre changers and the results are shown in the following table:
-%
-%\begin{table}[H]
-%	\centering
-%	\caption{Change makers in every genre}
-%	\begin{tabular}{|l|l|l|l|l|}
-%		\hline
-%		Genre & Avant-Garde          & Blues           & Children's      & Classical      \\ \hline
-%		Name  & Terry Riley          & Muddy Waters    & Alvin           & John Cage      \\ \hline
-%		Genre & Latin                & New Age         & Pop/Rock        & R\&B;          \\ \hline
-%		Name  & Antnio Carlos Jobim  & Mike Oldfield   & The Beatles     & Marvin Gaye    \\ \hline
-%		Genre & Comedy/Spoken        & Country         & Easy Listening  & Electronic     \\ \hline
-%		Name  & Spike Jones          & Johnny Cash     & Henry Mancini   & Kraftwerk      \\ \hline
-%		Genre & Reggae               & Religious       & Stage \& Screen & Vocal          \\ \hline
-%		Name  & Toots \& the Maytals & James Cleveland & Ennio Morricone & Billie Holiday \\ \hline
-%		Genre & International        & Easy Listening  & Jazz            &                \\ \hline
-%		Name  & Ravi Shankar         & loudness        & Miles Davis     &                \\ \hline
-%	\end{tabular}
-%	\label{tab:my-table}
-%\end{table}
-%
-%
-%\begin{figure}[htbp]
-%	\centering
-%	\begin{minipage}[t]{0.48\textwidth}
-%		\centering
-%		\includegraphics[width=8cm]{shijian.png}
-%		\caption{vocal-organization}
-%	\end{minipage}
-%	\begin{minipage}[t]{0.48\textwidth}
-%		\centering
-%		\includegraphics[width=7cm]{f of vocal.png}
-%		\caption{$\psi(t)$ of every year}
-%	\end{minipage}
-%\end{figure}
-
-
-
-
-
-
-
-\clearpage
-\begin{thebibliography}{99}
-	\bibitem{1} The Treaty on Principles Governing the Activities of States in the Exploration and Use of Outer Space, including the Moon and other Celestial Bodies, of 27 January 1967, United Nations RES 2222 (XXI).
-	\bibitem{2} Yan-Ming Liang $ \& $ Jia-Li Zhao. (2021). A comprehensive evaluation study of agricultural economy in southwest China - based on entropy weight TOPSIS method. Science, Technology and Industry (11), 227-232. doi:CNKI:SUN:CYYK.0.2021-11-040.
-	\bibitem{3} Guo JY, Zhang ZB $ \& $ Sun QY. (2008). Research and application of hierarchical analysis method. Chinese Journal of Safety Science (05), 148-153. doi:10.16265/j.cnki.issn1003-3033.2008.05.018.
-	\bibitem{4} Guo Q, Wang S, Li XH, Ma H, Wang S, Xu LW $ \& $ Li YY. (2006). Application of Lorenz curve and Gini Coefficient in the evaluation of fairness of community health service resource allocation. China Health Economics (01), 50-53. doi.
-	\bibitem{5} https://baike.baidu.com/item/\%E6\%B4\%9B\%E4\%BC\%A6\%E5\%85\%B9\%E6\%9B\\\%B2\%E7\%BA\%BF/2903864?fr=aladdin
-	\bibitem{6} Hu, Z. K.. (2004). A study on the theoretical optimal value of Gini Coefficient and its simple calculation formula. Economic Research (09), 60-69. doi:
-	\bibitem{7} Wang Guoyu $ \& $ Tao Yangzi. (2015). Analysis of the U.S. Outer Space Resources Exploration and Utilization Act of 2015 and Suggestions for Response. China Space (12), 21-25. doi:
-	\bibitem{8} https://en.wikipedia.org/wiki/Moon\_Treaty
-	\bibitem{9} Jiang X. (2006). The origin and challenges of Outer Space Treaty. Theoretical World (03), 114-116. doi:
-	\bibitem{10} Wang Guoyu. (2016). Pulling the plug on the outer space mining race? --A legal policy analysis of U.S. planetary mining legislation. Space International (05), 12-21. doi:
-	\bibitem{11} Li, Shouping. (2013). The commercial use of outer space and the response in China. Journal of Beijing University of Technology (Social Science Edition) (01), 99-106. doi:10.15918/j.jbitss1009-3370.2013.01.015.
-	\bibitem{12} Zhao, Yun. (2010). A review of the hot issues in Outer Space Treaty. Journal of Beijing University of Aeronautics and Astronautics (Social Science Edition) (01), 42-48. doi:10.13766/j.bhsk.1008-2204.2010.01.006.
-	\bibitem{13} Bo Shoushou. (2009). The current status of the five major treaties on Outer Space Treaty and the challenges they face. Journal of Beijing University of Aeronautics and Astronautics (Social Science Edition) (01), 38-42. doi:10.13766/j.bhsk.1008-2204.2009.01.003.
-	%\bibitem{14} Wang, Kongxiang. (2005). The challenge of space arms race to outer space law. Journal of Wuhan University (Philosophy and Social Science Edition) (03), 386-391. doi:
-\end{thebibliography}
-
-\end{document}  % 结束$
-%http://www.360doc.com/content/14/0505/10/15883912_374732455.shtml
-%Task5里的参考文献
-
-
-
-%无序和有序排列
-%\clearpage
-%\begin{itemize}
-%	\item \textbf{Impact of the World War II}
-%\end{itemize}
-%
-%In the 1940s, World War II broke out, and because the war had a melancholy color, the works created in the 1940s were also more negative (less valence) and less suitable for dance, resulting in less danceability. At the same time, Europe was caught in the middle of the war, and a large number of European artists immigrated to the United States for refuge. After World War II, the music artists who immigrated from Europe and the native American music artists influenced each other, which made the music develop well. Coupled with the relatively peaceful international environment after World War II, people had more energy and leisure time to enjoy music, and the popularity of music had a great development after World War II\upcite{3}
-%.
-%
-%\begin{itemize}
-%	\item \textbf{The impact of information technology}
-%\end{itemize}
-%
-%The emergence of the Internet in the 1970s and its subsequent development diversified the vehicles and media for disseminating musical works and made it cheaper and more convenient, and the popularity of music continued to increase. At the same time, however, offline musiac was more costly and therefore accounted for less than the ease and affordability of distributing music online, thus reducing the liveness characteristics of music.
-%
-%\begin{itemize}
-%	\item \textbf{The impact of politics}
-%\end{itemize}
-%
-%During the anti-war and civil rights movements in the United States in the 1960s, rock and roll made a huge impact on mainstream culture as a powerful weapon for youth subculture groups. During these movements, rock music was loved by many people. The danceability of the music increased due to the passionate rhythm of rock and roll, which made people dance to the music involuntarily\upcite{4}
-%
-%\begin{itemize}
-%	\item \textbf{The impact of the economy}
-%\end{itemize}
-%
-%In the 1930s, the economic crisis broke out across the United States, and the unemployment rate rose sharply in the face of closures and bankruptcies brought about by the Great Depression. The record industry at the time was hit hard. The music industry was hit hard and the popularity of music declined from the 1930s to the 1940s\upcite{5}
-%
-%
-%\section{Strengths and Weaknesses}
-%\begin{itemize}
-%	\item Strengths:
-%\end{itemize}
-%
-%1.It is innovative to construct influence models through networks.
-%
-%2.The selection of the network parameters of the influence network is scientific and reasonable.
-%
-%\begin{itemize}
-%	\item Weaknessess:
-%\end{itemize}
-%
-%1.Because of the large amount of data, our model cannot analyze each genre thoroughly.
-%
-%2.The indicators of the popularization model cannot be quantified, resulting in a low persuasibility of the model.
-%
-%3.As time changes, artists in one genre may create music in other genre styles, and we cannot consider this situation.
-%
-%4.We did not consider the impact that a collaboration between artists would have on the work.
+\end{document} 
