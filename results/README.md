@@ -21,6 +21,18 @@
 | `task2_weight_analysis.csv` | 有效权重分解 | 301周 | `judge_weight_rank`, `vote_weight_rank`, `judge_weight_pct`, `vote_weight_pct` |
 | `task2_upset_rate.csv` | 翻盘率分析 | 301周 | `actual_eliminated`, `judge_lowest`, `is_upset` |
 
+### Task 3: 争议选手分析结果
+
+分析4位争议选手: Jerry Rice, Billy Ray Cyrus, Bristol Palin, Bobby Bones
+
+| 文件 | 解决的问题 |
+|------|------------|
+| `task3_controversy_metrics.csv` | 量化争议程度：评委评分与观众投票的差异有多大？ |
+| `task3_weekly_performance.csv` | 追踪争议轨迹：选手每周的评委/观众表现如何演变？ |
+| `task3_counterfactual_detail.csv` | 评分方法影响：若换用另一种方法，该选手会在哪周被淘汰？ |
+| `task3_judge_mechanism.csv` | 评委决定权：在 bottom-2 机制下，评委会选择淘汰谁？ |
+| `task3_controversy_summary.csv` | 综合结论：选手被拯救多少次？换方法后命运如何改变？ |
+
 ## 数据说明
 
 ### Task 1 核心指标
@@ -42,6 +54,11 @@
   - 排名法: 64.9% (48/74)
   - 百分比法: 54.6% (124/227)
 
+### Task 3 核心指标
+
+- **Controversy Intensity**: 争议强度 = 平均评委排名 - 平均投票排名 (正值表示评委评分低于观众支持)
+- **Times Saved by Fans**: 被观众拯救次数 (评委垫底但未被淘汰)
+
 ## 生成方式
 
 ```bash
@@ -52,6 +69,9 @@ cd scripts && python task1_vote_estimator_v3.py
 cd scripts && python task2_scoring_methods.py
 cd scripts && python task2_comparison_analysis.py
 cd scripts && python task2_weight_decomposition.py
+
+# 生成 Task 3 结果
+cd scripts && python task3_controversy_analysis.py
 ```
 
 ---

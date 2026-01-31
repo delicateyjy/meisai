@@ -1,0 +1,33 @@
+contestant,season,week,n_contestants,judge_score,judge_rank,vote_share,vote_rank,is_judge_last,is_eliminated,week_eliminated
+Jerry Rice,2,1,10,21.0,5,0.1026,8,False,False,Kenny Mayne
+Jerry Rice,2,2,9,23.0,4,0.1091,6,False,False,Tatum O'Neal
+Jerry Rice,2,3,8,19.0,7,0.1444,3,False,False,Giselle Fernandez
+Jerry Rice,2,4,7,24.0,5,0.147,5,False,False,Master P
+Jerry Rice,2,5,6,23.0,5,0.1988,2,False,False,Tia Carrere
+Jerry Rice,2,6,5,23.0,4,0.2525,1,False,False,George Hamilton
+Jerry Rice,2,7,4,20.5,4,0.3344,1,True,False,Lisa Rinna
+Billy Ray Cyrus,4,1,11,13.0,11,0.0921,6,True,False,Paulina Porizkova
+Billy Ray Cyrus,4,2,11,21.0,7,0.1004,4,False,False,Paulina Porizkova
+Billy Ray Cyrus,4,3,10,21.0,7,0.1137,3,False,False,Shandi Finnessey
+Billy Ray Cyrus,4,4,9,21.0,5,0.1202,3,False,False,Leeza Gibbons
+Billy Ray Cyrus,4,5,8,17.0,7,0.13,4,False,False,Clyde Drexler
+Billy Ray Cyrus,4,6,7,21.0,6,0.1582,3,False,False,Heather Mills
+Billy Ray Cyrus,4,7,6,19.0,6,0.1794,4,True,False,John Ratzenberger
+Billy Ray Cyrus,4,8,5,19.0,5,0.0918,5,True,True,Billy Ray Cyrus
+Bristol Palin,11,1,12,18.0,7,0.0853,6,False,False,David Hasselhoff
+Bristol Palin,11,2,11,22.0,3,0.0908,8,False,False,Michael Bolton
+Bristol Palin,11,3,10,19.0,9,0.0958,8,False,False,Margaret Cho
+Bristol Palin,11,4,9,16.0,8,0.1005,8,False,False,The Situation
+Bristol Palin,11,5,8,18.0,8,0.1191,7,True,False,Florence Henderson
+Bristol Palin,11,6,7,27.9998,6,0.1482,6,False,False,Audrina Patridge
+Bristol Palin,11,7,6,32.5,6,0.1779,3,True,False,Rick Fox
+Bristol Palin,11,8,5,23.5,5,0.2085,4,True,False,Kurt Warner
+Bristol Palin,11,9,4,26.5,4,0.2843,3,True,False,Brandy
+Bobby Bones,27,1,13,20.0,6,0.0729,11,False,False,Nikki Glaser
+Bobby Bones,27,2,12,19.5,10,0.0746,9,False,False,Danelle Umstead
+Bobby Bones,27,3,11,23.0,8,0.0833,8,False,False,Nancy McKeon
+Bobby Bones,27,4,10,20.0,9,0.0994,6,False,False,Tinashe
+Bobby Bones,27,5,9,21.0,8,0.1078,8,False,False,Juan Pablo Di Pace
+Bobby Bones,27,6,9,22.0,7,0.1041,6,False,False,Mary Lou Retton
+Bobby Bones,27,7,8,26.5,6,0.1211,6,False,False,John Schneider
+Bobby Bones,27,8,6,22.5,6,0.1746,4,True,False,Juan Pablo Di Pace

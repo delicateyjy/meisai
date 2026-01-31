@@ -1,0 +1,33 @@
+season,week,contestant,n_contestants,actual_method,cf_method,actual_eliminated,cf_eliminated,actual_rank,cf_rank,contestant_actual_eliminated,contestant_cf_eliminated,elimination_changed
+2,1,Jerry Rice,10,rank,percent,Kenny Mayne,Kenny Mayne,8,5,False,False,False
+2,2,Jerry Rice,9,rank,percent,Tatum O'Neal,Tatum O'Neal,6,6,False,False,False
+2,3,Jerry Rice,8,rank,percent,Giselle Fernandez,Giselle Fernandez,5,6,False,False,False
+2,4,Jerry Rice,7,rank,percent,Master P,Master P,6,5,False,False,False
+2,5,Jerry Rice,6,rank,percent,Tia Carrere,Tia Carrere,3,3,False,False,False
+2,6,Jerry Rice,5,rank,percent,George Hamilton,George Hamilton,3,3,False,False,False
+2,7,Jerry Rice,4,rank,percent,Lisa Rinna,Lisa Rinna,3,2,False,False,False
+4,1,Billy Ray Cyrus,11,percent,rank,Paulina Porizkova,Leeza Gibbons,9,9,False,False,True
+4,2,Billy Ray Cyrus,11,percent,rank,Paulina Porizkova,Shandi Finnessey,5,6,False,False,True
+4,3,Billy Ray Cyrus,10,percent,rank,Shandi Finnessey,John Ratzenberger,5,6,False,False,True
+4,4,Billy Ray Cyrus,9,percent,rank,Leeza Gibbons,Leeza Gibbons,5,4,False,False,False
+4,5,Billy Ray Cyrus,8,percent,rank,Clyde Drexler,Clyde Drexler,6,5,False,False,False
+4,6,Billy Ray Cyrus,7,percent,rank,Heather Mills,John Ratzenberger,5,5,False,False,True
+4,7,Billy Ray Cyrus,6,percent,rank,John Ratzenberger,John Ratzenberger,5,5,False,False,False
+4,8,Billy Ray Cyrus,5,percent,rank,Billy Ray Cyrus,Billy Ray Cyrus,5,5,True,True,False
+11,1,Bristol Palin,12,percent,rank,David Hasselhoff,David Hasselhoff,7,7,False,False,False
+11,2,Bristol Palin,11,percent,rank,Michael Bolton,Michael Bolton,7,7,False,False,False
+11,3,Bristol Palin,10,percent,rank,Margaret Cho,Margaret Cho,8,9,False,False,False
+11,4,Bristol Palin,9,percent,rank,The Situation,The Situation,8,8,False,False,False
+11,5,Bristol Palin,8,percent,rank,Florence Henderson,Bristol Palin,7,8,False,True,True
+11,6,Bristol Palin,7,percent,rank,Audrina Patridge,Kurt Warner,5,6,False,False,True
+11,7,Bristol Palin,6,percent,rank,Rick Fox,Rick Fox,5,5,False,False,False
+11,8,Bristol Palin,5,percent,rank,Kurt Warner,Kurt Warner,4,4,False,False,False
+11,9,Bristol Palin,4,percent,rank,Brandy,Brandy,3,3,False,False,False
+27,1,Bobby Bones,13,percent,rank,Nikki Glaser,Nikki Glaser,9,9,False,False,False
+27,2,Bobby Bones,12,percent,rank,Danelle Umstead,Danelle Umstead,10,10,False,False,False
+27,3,Bobby Bones,11,percent,rank,Nancy McKeon,Nancy McKeon,8,8,False,False,False
+27,4,Bobby Bones,10,percent,rank,Joe Amabile,Joe Amabile,8,8,False,False,False
+27,5,Bobby Bones,9,percent,rank,Joe Amabile,Bobby Bones,7,8,False,True,True
+27,6,Bobby Bones,9,percent,rank,Mary Lou Retton,John Schneider,7,7,False,False,True
+27,7,Bobby Bones,8,percent,rank,John Schneider,John Schneider,6,6,False,False,False
+27,8,Bobby Bones,6,percent,rank,Juan Pablo Di Pace,Bobby Bones,5,6,False,True,True

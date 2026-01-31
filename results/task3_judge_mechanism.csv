@@ -1,0 +1,33 @@
+season,week,n_contestants,bottom_two,bottom_1_score,bottom_2_score,judge_choice,actual_eliminated,mechanism_matches_actual,focus_contestant,contestant_in_bottom_two,contestant_would_be_eliminated
+2,1,10,Kenny Mayne vs George Hamilton,13.0,18.0,Kenny Mayne,Kenny Mayne,True,Jerry Rice,False,False
+2,2,9,Tatum O'Neal vs George Hamilton,17.0,22.0,Tatum O'Neal,Tatum O'Neal,True,Jerry Rice,False,False
+2,3,8,Giselle Fernandez vs Lisa Rinna,22.0,25.0,Giselle Fernandez,Giselle Fernandez,True,Jerry Rice,False,False
+2,4,7,Master P vs Jerry Rice,8.0,24.0,Master P,Master P,True,Jerry Rice,True,False
+2,5,6,Tia Carrere vs George Hamilton,22.0,24.0,Tia Carrere,Tia Carrere,True,Jerry Rice,False,False
+2,6,5,George Hamilton vs Lisa Rinna,23.0,27.0,George Hamilton,George Hamilton,True,Jerry Rice,False,False
+2,7,4,Lisa Rinna vs Jerry Rice,26.5,20.5,Jerry Rice,Lisa Rinna,False,Jerry Rice,True,True
+4,1,11,Leeza Gibbons vs Billy Ray Cyrus,15.0,13.0,Billy Ray Cyrus,Paulina Porizkova,False,Billy Ray Cyrus,True,True
+4,2,11,Shandi Finnessey vs Paulina Porizkova,20.0,21.0,Shandi Finnessey,Paulina Porizkova,False,Billy Ray Cyrus,False,False
+4,3,10,Shandi Finnessey vs John Ratzenberger,21.0,20.0,John Ratzenberger,Shandi Finnessey,False,Billy Ray Cyrus,False,False
+4,4,9,Leeza Gibbons vs John Ratzenberger,16.0,16.0,Leeza Gibbons,Leeza Gibbons,True,Billy Ray Cyrus,False,False
+4,5,8,Clyde Drexler vs Heather Mills,13.0,21.0,Clyde Drexler,Clyde Drexler,True,Billy Ray Cyrus,False,False
+4,6,7,John Ratzenberger vs Heather Mills,19.0,23.0,John Ratzenberger,Heather Mills,False,Billy Ray Cyrus,False,False
+4,7,6,John Ratzenberger vs Billy Ray Cyrus,22.5,19.0,Billy Ray Cyrus,John Ratzenberger,False,Billy Ray Cyrus,True,True
+4,8,5,Billy Ray Cyrus vs Ian Ziering,19.0,23.5,Billy Ray Cyrus,Billy Ray Cyrus,True,Billy Ray Cyrus,True,True
+11,1,12,David Hasselhoff vs Margaret Cho,15.0,15.0,David Hasselhoff,David Hasselhoff,True,Bristol Palin,False,False
+11,2,11,Michael Bolton vs Margaret Cho,12.0,18.0,Michael Bolton,Michael Bolton,True,Bristol Palin,False,False
+11,3,10,Margaret Cho vs Bristol Palin,18.0,19.0,Margaret Cho,Margaret Cho,True,Bristol Palin,True,False
+11,4,9,The Situation vs Bristol Palin,14.0,16.0,The Situation,The Situation,True,Bristol Palin,True,False
+11,5,8,Bristol Palin vs Florence Henderson,18.0,21.0,Bristol Palin,Florence Henderson,False,Bristol Palin,True,True
+11,6,7,Bristol Palin vs Kurt Warner,27.9998,21.9999,Kurt Warner,Audrina Patridge,False,Bristol Palin,True,False
+11,7,6,Rick Fox vs Bristol Palin,34.5,32.5,Bristol Palin,Rick Fox,False,Bristol Palin,True,True
+11,8,5,Bristol Palin vs Kurt Warner,23.5,24.0,Bristol Palin,Kurt Warner,False,Bristol Palin,True,True
+11,9,4,Bristol Palin vs Brandy,26.5,28.5,Bristol Palin,Brandy,False,Bristol Palin,True,True
+27,1,13,Nikki Glaser vs Joe Amabile,17.5,14.0,Joe Amabile,Nikki Glaser,False,Bobby Bones,False,False
+27,2,12,Danelle Umstead vs Joe Amabile,18.5,17.5,Joe Amabile,Danelle Umstead,False,Bobby Bones,False,False
+27,3,11,John Schneider vs Nancy McKeon,21.0,22.0,John Schneider,Nancy McKeon,False,Bobby Bones,False,False
+27,4,10,Joe Amabile vs Bobby Bones,15.0,20.0,Joe Amabile,Tinashe,False,Bobby Bones,True,False
+27,5,9,Joe Amabile vs Bobby Bones,17.0,21.0,Joe Amabile,Juan Pablo Di Pace,False,Bobby Bones,True,False
+27,6,9,John Schneider vs Mary Lou Retton,19.0,24.0,John Schneider,Mary Lou Retton,False,Bobby Bones,False,False
+27,7,8,Joe Amabile vs John Schneider,23.5,27.0,Joe Amabile,John Schneider,False,Bobby Bones,False,False
+27,8,6,Bobby Bones vs Joe Amabile,22.5,23.0,Bobby Bones,Juan Pablo Di Pace,False,Bobby Bones,True,True
