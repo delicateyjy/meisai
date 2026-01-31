@@ -558,13 +558,16 @@ would change the elimination decision:
     \text{EFR} = \frac{1}{W}\sum_{w=1}^{W} \mathbf{1}[E^{\text{actual}}_w \neq E^{\text{cf}}_w]
 \end{equation}
 
+where $E_w^{actual}$ is the historically observed elimination and $E_w^{cf}$ is the counterfactual outcome under the alternative aggregation scheme.
+
 % 有效权重：各成分对综合得分的方差贡献比例
 \textbf{Effective Weight}: The variance contribution to the combined score:
 \begin{equation}
     \alpha^{\text{pct}} = \frac{\text{Var}(P^{(S)})}{\text{Var}(P^{(S)}) + \text{Var}(P^{(V)})}
 \end{equation}
 % 其中P^(S)和P^(V)分别是评委分数百分比和投票百分比
-where $P^{(S)}$ and $P^{(V)}$ are the judge score and vote percentages.
+
+where $P^{(S)}$ and $P^{(V)}$ are the judge scores percentages and fan votes percentages.
 
 \subsection{Results}
 
@@ -573,7 +576,7 @@ Using the vote estimates from Task~1, we conduct counterfactual analysis on
 301 weeks across 34 seasons.
 
 % 反事实分析汇总表
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Counterfactual Analysis Summary}
 \label{tab:counterfactual-summary}
@@ -584,9 +587,9 @@ Using the vote estimates from Task~1, we conduct counterfactual analysis on
 % 分析周数
 Weeks analyzed & 301 & 74 & 227 \\
 % 淘汰翻转次数
-Elimination flips & 66 & 16 & 50 \\
+Elimination flips & 66 & 0 & 66 \\
 % 翻转率
-Flip Rate & 21.9\% & 21.6\% & 22.0\% \\
+EFR & 21.9\% & 0.0\% & 29.1\% \\
 \hline
 \end{tabular}
 \end{table}
@@ -610,17 +613,19 @@ Audience effective weight & 51.8\% & 77.1\% \\
 
 % 有效权重分析表明：百分比法给予观众77.1%的有效权重，而排名法为51.8%
 The effective weight analysis reveals that the Percentage Method assigns 77.1\%
-effective weight to audience votes, compared to 51.8\% under the Ranking Method.
+effective weight to fan votes, compared to 51.8\% under the Ranking Method.
 % 原因：投票分布通常比评委分数更分散，导致投票主导百分比综合得分
-This occurs because vote distributions are typically more dispersed than judge
-scores, causing votes to dominate the combined percentage score.
+This occurs because fan votes distributions are typically more dispersed than judge
+scores, causing fan votes to dominate the combined percentage score.
 
 % 结论：百分比法比排名法更偏向粉丝投票
 % 这解释了第3-27季的争议：低评委分数但高粉丝支持的选手能够晋级
 % 节目在第28季回归排名法，旨在恢复评委与观众之间的平衡
-\textbf{Conclusion}: The Percentage Method favors fan votes more than the Ranking
+
+Synthesizing the evidence from our counterfactual analysis and effective weight metrics, we concluded that the Percentage Method favors fan votes more than the Ranking
 Method. This explains the controversies during Seasons 3--27, where contestants
 with low judge scores but strong fan support could advance.
-The show's return to the Ranking Method in Season 28 aimed to restore balance.
 
+% The show's return to the Ranking Method in Season 28 aimed to restore balance. 
+    
 \end{document}
