@@ -280,14 +280,19 @@ We use a Dirichlet distribution as the prior:
 \begin{equation}
 \boldsymbol{\pi} \sim \text{Dirichlet}(\alpha \cdot \boldsymbol{\theta})
 \end{equation}
+% 其中α是控制集中度的先验强度参数，θ是先验权重向量
+where $\alpha$ is the prior strength parameter controlling concentration,
+and $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)$ is the prior weight vector.
 
 % 先验权重向量θ设计为加权混合：
 The prior weight vector $\boldsymbol{\theta}$ is designed as a weighted mixture:
 \begin{equation}
 \theta_i = (1 - \beta) \cdot f_i^{\text{feature}} + \beta \cdot \tilde{S}_i
 \end{equation}
-% 其中S̃_i是归一化的评委分数
-where $\tilde{S}_i = S_i / \sum_j S_j$ is the normalized judge scores.
+% 其中β控制先验与评委分数的关联程度，f_i^feature是选手i的特征权重，S̃_i是归一化评委分数
+where $\beta \in [0,1]$ controls the correlation between prior and judges' scores,
+$f_i^{\text{feature}}$ is the feature-based weight for contestant $i$,
+and $\tilde{S}_i = S_i / \sum_j S_j$ is the normalized judges' score.
 
 % 基于特征的权重：f_i^feature项融入职业人气权重和年龄效应
 \textbf{Feature-based weights}: The term $f_i^{\text{feature}}$ incorporates profession
@@ -306,8 +311,8 @@ as the primary information comes from elimination constraints rather than priors
 \begin{equation}
 \text{age\_factor}_i = 1.0 - 0.01 \times |a_i - 30|
 \end{equation}
-% 限制在[0.7, 1.2]范围内
-capped within $[0.7, 1.2]$.
+% 其中a_i是选手i的年龄，结果限制在[0.7, 1.2]范围内
+where $a_i$ is the age of contestant $i$, capped within $[0.7, 1.2]$.
 
 % --- 似然函数 ---
 \subsubsection{Likelihood Function}
@@ -331,35 +336,17 @@ P(E = k | \boldsymbol{\pi}, \mathbf{S}) =
   \frac{\exp(\tau \cdot C_k^{\text{rank}})}{\sum_{j} \exp(\tau \cdot C_j^{\text{rank}})}
 \end{equation}
 
-% 温度参数τ控制约束的严格程度
-The temperature parameter $\tau$ controls constraint strictness.
+% 温度参数τ控制约束的严格程度：值越高，对淘汰结果的约束越严格
+The temperature parameter $\tau$ controls constraint strictness:
+higher values enforce stricter adherence to elimination outcomes.
 % 我们使用动态温度：
 We use dynamic temperature:
 \begin{equation}
 \tau_{\text{eff}} = \tau_0 \cdot (1 + 2 \cdot m)
 \end{equation}
-% 其中m衡量淘汰边界的清晰程度
-where $m$ measures the clarity of the elimination margin.
+% 其中τ_0是基础温度，m衡量淘汰边界的清晰程度
+where $\tau_0$ is the base temperature and $m$ measures the clarity of the elimination margin.
 
-% --- 为什么使用软约束而非硬约束 ---
-% 解释软约束的设计动机
-\textbf{Why soft constraints?}
-% 硬约束方法只接受满足淘汰条件的样本，会导致循环论证
-A hard constraint approach---accepting only samples where the eliminated contestant
-has the lowest combined score---leads to circular reasoning:
-% 模型会达到100%的"预测准确率"，但这只是因为我们强制满足了约束
-the model would achieve 100\% ``prediction accuracy'' simply because we forced
-the constraint to be satisfied.
-% 这不提供真正的预测洞察
-This provides no genuine predictive insight.
-
-% 软约束通过概率方式使用淘汰信息，允许模型学习投票分布的结构
-Our soft constraint formulation uses elimination information probabilistically,
-% 而非机械地强制满足
-allowing the model to learn the structure of vote distributions
-rather than mechanically enforcing outcomes.
-% 结果是更诚实的不确定性估计和更有意义的后验分布
-The result is more honest uncertainty estimates and more meaningful posterior distributions.
 
 % ============================================================================
 % 4.3 模型实现
@@ -379,19 +366,14 @@ We use a Dirichlet proposal that naturally respects the simplex constraint:
 \begin{equation}
 \boldsymbol{\pi}' \sim \text{Dirichlet}\left(\frac{\boldsymbol{\pi}}{\lambda}\right)
 \end{equation}
+% 其中λ是控制探索幅度的提议步长
+where $\lambda$ is the proposal step size controlling exploration magnitude.
 
 % --- 自适应步长 ---
 \subsubsection{Adaptive Step Size}
 
-% 步长λ自适应调整以达到约30%的目标接受率：
-The step size $\lambda$ is adaptively adjusted to achieve a target acceptance rate of 30\%:
-\begin{equation}
-\lambda^{(t+1)} = \begin{cases}
-  0.95 \cdot \lambda^{(t)} & r_{\text{recent}} < 0.25 \\
-  1.05 \cdot \lambda^{(t)} & r_{\text{recent}} > 0.35 \\
-  \lambda^{(t)} & \text{otherwise}
-\end{cases}
-\end{equation}
+% 步长λ自适应调整以达到约30%的目标接受率
+The step size $\lambda$ is adaptively adjusted to maintain an acceptance rate around 30\%.
 
 % --- 超参数设置 ---
 \subsubsection{Hyperparameter Settings}
@@ -465,41 +447,18 @@ Mean Kendall's $\tau$ & 0.717 \\
 \end{table}
 
 % --- 一致性结果分析 ---
-% 对表格数据进行解读，说明模型的有效性
-The results demonstrate that our Bayesian vote estimation model achieves strong consistency
-with observed elimination outcomes.
-% 93.7%的EPA表明估计的投票在绝大多数情况下能正确预测淘汰
+% 结果表明模型与观测淘汰结果一致
 The 93.7\% EPA indicates that our estimated vote distributions correctly predict
-the actual elimination in the vast majority of weeks.
-% Top-2准确率97.7%更具说服力：几乎所有情况下，实际被淘汰者都在模型预测的后两名中
-The 97.7\% Top-2 accuracy is particularly compelling: in nearly all cases, the
-eliminated contestant was among the bottom two predicted by our model.
-
-% 值得注意的是，排名法(95.9%)的EPA高于百分比法(93.0%)
-Notably, the Ranking Method achieves higher EPA (95.9\%) compared to the Percentage
-Method (93.0\%).
-% 这一差异可以从数学性质解释：排名法的离散性质使得约束更加明确
-This difference can be explained by the mathematical properties of each method:
-the discrete nature of the Ranking Method creates sharper elimination boundaries,
-% 使MCMC更容易收敛到满足约束的投票分布
-making it easier for MCMC to converge to vote distributions that satisfy the constraints.
-% 相比之下，百分比法的连续性质导致更大的可行解空间
-In contrast, the continuous nature of the Percentage Method leads to a larger
-feasible solution space, introducing more uncertainty.
-
-% 平均淘汰概率0.481表明模型对淘汰预测有中等置信度
-The mean elimination probability of 0.481 indicates moderate confidence in predictions.
-% 这个值低于1.0是符合预期的：软约束允许非确定性预测
-This value being well below 1.0 is expected and desirable: our soft constraint
-formulation deliberately avoids deterministic predictions,
-% 诚实地反映了逆问题固有的不确定性
-honestly reflecting the inherent uncertainty of this inverse problem.
-
-% Kendall's τ为0.717表明预测排名与隐含投票排名高度相关
-The Kendall's $\tau$ of 0.717 indicates strong rank correlation between predicted
-elimination order and the implied vote rankings,
-% 进一步验证了模型捕捉投票行为模式的能力
-further validating the model's ability to capture voting behavior patterns.
+the actual elimination in most weeks.
+% Top-2准确率97.7%：几乎所有情况下，实际被淘汰者都在模型预测的后两名中
+The 97.7\% Top-2 accuracy shows that in nearly all cases, the eliminated contestant
+was among the bottom two predicted by our model.
+% 排名法EPA略高于百分比法，这与排名法的离散约束更明确有关
+The Ranking Method achieves slightly higher EPA (95.9\%) than the Percentage Method (93.0\%),
+likely due to its sharper discrete constraints.
+% Kendall's τ为0.717表明预测排名与投票排名相关性较好
+The Kendall's $\tau$ of 0.717 indicates reasonable rank correlation between predicted
+and implied vote rankings.
 
 % --- 确定性指标（Q1b）---
 \subsubsection{Certainty Metrics (Q1b)}
@@ -552,42 +511,11 @@ Mean 95\% CI Width & 0.292 \\
 \end{table}
 
 % --- 确定性结果分析 ---
-% 对不确定性指标进行解读
-The certainty metrics reveal important patterns about estimation uncertainty.
-% 平均CV为0.710表明投票估计存在相当的不确定性，这是逆问题的固有特征
-The mean CV of 0.710 indicates substantial uncertainty in vote estimates,
-which is an inherent characteristic of this inverse problem rather than a model deficiency.
-
-% 一个关键发现是被淘汰者与未淘汰者之间的不确定性差异
-A key finding is the asymmetry between eliminated and non-eliminated contestants.
-% 被淘汰者的CI宽度(0.167)显著小于未淘汰者(0.308)
-Eliminated contestants have narrower CI widths (0.167) compared to non-eliminated
-contestants (0.308).
-% 这是符合直觉的：淘汰事件为被淘汰者的投票份额提供了强约束（必须是最低的）
-This is intuitive: the elimination event provides a strong constraint on the
-eliminated contestant's vote share---it must be low enough to result in elimination.
-% 而未淘汰者只需满足"不是最低"的弱约束，允许更大的变化范围
-Non-eliminated contestants only need to satisfy the weaker constraint of ``not being
-the lowest,'' allowing for a wider range of plausible values.
-
-% 尽管被淘汰者的CV(0.761)略高于未淘汰者(0.704)
-Despite eliminated contestants having slightly higher CV (0.761 vs. 0.704),
-% 这是因为被淘汰者通常投票份额较低，导致相同的绝对不确定性产生更大的相对不确定性
-this is because eliminated contestants typically have lower vote shares,
-causing the same absolute uncertainty to translate into larger relative uncertainty.
-
-% --- 不确定性解读 ---
-\subsubsection{Interpretation of Uncertainty}
-
-% 投票估计中的不确定性反映了该逆问题固有的不确定性
-The uncertainty in vote estimates reflects the inherent indeterminacy of this inverse
-problem.
-% 我们的模型提供完整的后验分布而非点估计
-Rather than point estimates, our model provides complete posterior distributions.
-% 例如，后验均值15%、95%CI为[12%,18%]表示：
-For example, a posterior mean of 15\% with 95\% CI [12\%, 18\%] indicates that
-% "我们有95%的置信度认为该选手获得了12%到18%的观众投票"
-``we are 95\% confident that the contestant received between 12\% and 18\% of audience votes.''
+% 平均CV为0.710，反映逆问题固有的不确定性
+The mean CV of 0.710 reflects the inherent uncertainty of this inverse problem.
+% 被淘汰者CI更窄，因为淘汰事件提供了强约束
+Eliminated contestants have narrower CI widths (0.167 vs. 0.308) because
+the elimination event constrains their vote share more tightly.
 
 
 % ----------------------------------------------------------------------------

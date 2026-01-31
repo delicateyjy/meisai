@@ -474,7 +474,7 @@ the observable elimination outcomes.
 Formally, for each week $w$ in season $s$, we observe:
 \begin{itemize}
     % 评委分数向量S，其中每个分数在4到40分之间
-    \item Judges' scores $\mathbf{S} = (S_1, S_2, \ldots, S_n)$, where $S_i \in [4, 40]$
+    \item Judge scores $\mathbf{S} = (S_1, S_2, \ldots, S_n)$, where $S_i \in [4, 40]$
     % 淘汰结果E，即被淘汰选手的索引
     \item Elimination result $E \in \{1, 2, \ldots, n\}$ (the index of the eliminated contestant)
 \end{itemize}
@@ -499,19 +499,19 @@ The elimination is governed by the show's scoring rules:
 \begin{equation}
 C_i^{\text{rank}} = R_i^{S} + R_i^{\pi}, \quad E = \arg\max_i C_i^{\text{rank}}
 \end{equation}
-% 其中R_i^S和R_i^π分别是选手i按评委分数和投票的排名
-where $R_i^{S}$ and $R_i^{\pi}$ are the contestant's ranks by judges' scores and votes respectively.
+% 其中R_i^S和R_i^π分别是选手i按评委分数和粉丝投票的排名
+where $R_i^{S}$ and $R_i^{\pi}$ represent the contestant's ranks by judge scores and fan votes, respectively.
 
 % 百分比法（第3-27季）：
 \textbf{Percentage Method} (Seasons 3--27):
-% 综合得分 = 评委分数百分比 + 投票百分比，得分最低者被淘汰
+% 综合得分 = 评委分数百分比 + 粉丝投票百分比，得分最低者被淘汰
 \begin{equation}
 C_i^{\text{pct}} = \frac{S_i}{\sum_j S_j} + \pi_i, \quad E = \arg\min_i C_i^{\text{pct}}
 \end{equation}
 
 % 从数学上看，给定淘汰结果E，存在无穷多个可能产生该结果的投票分布。
-Mathematically, given an elimination outcome $E$, infinitely many vote distributions
-could have produced this result.
+
+Mathematically, given an elimination outcome $E$, there exist infinitely many fan votes distributions that satisfy this result.
 % 我们的任务是通过融入先验知识来识别最合理的分布，同时恰当地量化固有的不确定性。
 Our task is to identify the most plausible distribution
 by incorporating prior knowledge while properly quantifying the inherent uncertainty.
@@ -558,7 +558,7 @@ where $\alpha$ is the prior strength parameter controlling concentration,
 and $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)$ is the prior weight vector.
 
 % 先验权重向量θ设计为加权混合：
-The weight vector $\boldsymbol{\theta}$ is designed as a weighted mixture:
+The prior weight vector $\boldsymbol{\theta}$ is designed as a weighted mixture:
 \begin{equation}
 \theta_i = (1 - \beta) \cdot f_i^{\text{feature}} + \beta \cdot \tilde{S}_i
 \end{equation}
@@ -687,7 +687,7 @@ The random seed is fixed to ensure reproducibility.
 Additional metrics include Top-2 accuracy and Kendall's $\tau$ rank correlation.
 
 % 表格总结了34季的一致性指标
-Table~\ref{tab:consistency} summarizes the consistency metrics across all 34 seasons.
+Table~\ref{tab:consistency} summarizes the consistency metrics in all 34 seasons.
 
 \begin{table}[htbp]
 \centering
