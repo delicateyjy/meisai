@@ -523,140 +523,78 @@ the elimination event constrains their vote share more tightly.
 % ----------------------------------------------------------------------------
 \section{Task 2: Scoring Method Comparison}
 
-\subsection{Ranking Method vs. Percentage Method}
+\subsection{Method Characteristics}
 
-% 回顾3.3节中定义的两种计分方法，这里聚焦于它们的关键差异。
-Recall the two scoring methods defined in Section~\ref{sec:scoring-evolution}.
-% 我们不重复数学公式，而是关注影响淘汰决策的核心差异。
-Rather than repeating the mathematical formulations, we focus on the key differences
-that affect elimination decisions.
+% 两种计分方法在如何结合评委分数和观众投票方面存在根本差异：
+The two scoring methods differ fundamentally in how they combine judges' scores
+and audience votes:
 
-% 排名法将评委分数和观众投票分别转换为名次后相加。
-The Ranking Method converts both judges' scores and audience votes to ordinal ranks
-before combining them.
-% 这种转换消除了原始分数的数值信息，只保留相对顺序。
-This conversion discards the numerical magnitude, preserving only relative ordering.
-% 因此，30分和25分的差距在排名法中与25分和24分的差距等价——都只差一个名次。
-Consequently, a gap between 30 and 25 points carries the same weight as a gap between
-25 and 24 points---both represent a single rank difference.
-
-% 相比之下，百分比法保留分数的数值信息。
-In contrast, the Percentage Method preserves numerical information.
-% 分数差距大的选手在百分比贡献上也会有更大差距。
-Contestants with larger score gaps will have correspondingly larger gaps in their
-percentage contributions.
-% 这使得百分比法对评委分数的离散程度更加敏感。
-This makes the Percentage Method more sensitive to the dispersion of judges' scores.
-
-% 两种方法的核心差异可以从三个维度理解：
-The fundamental differences can be understood along three dimensions:
 \begin{itemize}
-    % 权重结构：固定 vs 动态
-    \item \textbf{Weight structure}: The Ranking Method assigns fixed 50\%--50\% weights
-    to judges and audience (in rank contribution), while the Percentage Method has
-    dynamic effective weights depending on score distributions.
-    % 敏感性：离散 vs 连续
-    \item \textbf{Sensitivity}: The Ranking Method exhibits step-function sensitivity
-    (only responds when ranks change), while the Percentage Method responds
-    continuously to any score change.
-    % 极端值抗性
-    \item \textbf{Robustness to extremes}: The Ranking Method is robust to outliers
-    since it only uses ordinal information, while the Percentage Method can be
-    dominated by extreme scores.
+    % 排名法：将分数和投票转换为名次后相加，消除数值大小信息
+    \item \textbf{Ranking Method}: Converts scores and votes to ordinal ranks before
+    combining, discarding numerical magnitude.
+    % 百分比法：保留数值信息，直接按百分比相加
+    \item \textbf{Percentage Method}: Preserves numerical information by combining
+    score percentages directly.
 \end{itemize}
 
-% 这些差异意味着两种方法可能产生不同的淘汰决定。
-These differences imply that the two methods may produce different elimination
-decisions for the same underlying data.
-% 我们接下来量化这些差异的频率和模式。
-We next quantify the frequency and patterns of such discrepancies.
+% 这导致三个关键差异：
+% (1) 排名法权重固定50%-50%，百分比法权重动态变化
+% (2) 排名法仅在名次变化时响应，百分比法连续响应
+% (3) 排名法对极端值具有鲁棒性
+These lead to three key differences:
+(1) The Ranking Method has fixed 50\%--50\% weight structure, while the Percentage
+Method has dynamic effective weights;
+(2) The Ranking Method responds only when ranks change, while the Percentage
+Method responds continuously;
+(3) The Ranking Method is robust to outliers.
 
-\subsection{Comparative Metrics}
+\subsection{Metrics}
 
-% 为了系统地比较两种计分方法，我们定义以下评估指标。
-To systematically compare the two scoring methods, we define evaluation metrics
-targeting the core question: does one method favor fan votes more?
-
-% === 淘汰翻转率 ===
-\subsubsection{Elimination Flip Rate (EFR)}
-
-% 淘汰翻转率衡量当切换计分方法时，淘汰决定改变的频率。
-The Elimination Flip Rate measures how often the elimination decision changes
-when switching between scoring methods.
-% 形式化定义：
-Formally:
+% 淘汰翻转率(EFR)：切换计分方法时淘汰决定改变的周数比例
+\textbf{Elimination Flip Rate (EFR)}: The fraction of weeks where switching methods
+would change the elimination decision:
 \begin{equation}
     \text{EFR} = \frac{1}{W}\sum_{w=1}^{W} \mathbf{1}[E^{\text{actual}}_w \neq E^{\text{cf}}_w]
 \end{equation}
-% 其中W是分析的总周数，E表示被淘汰选手。
-where $W$ is the total number of weeks, and $E^{\text{actual}}_w$, $E^{\text{cf}}_w$
-denote the eliminated contestants under actual and counterfactual methods.
 
-% === 有效权重 ===
-\subsubsection{Effective Weight}
-
-% 核心问题是：在每种方法下，评委和观众的实际贡献比例是多少？
-The key question is: what is the actual contribution of judges versus audience
-under each method?
-% 我们通过有效权重来回答。
-We answer this through \textit{effective weight}, defined as the variance
-contribution to the combined score:
+% 有效权重：各成分对综合得分的方差贡献比例
+\textbf{Effective Weight}: The variance contribution to the combined score:
 \begin{equation}
     \alpha^{\text{pct}} = \frac{\text{Var}(P^{(S)})}{\text{Var}(P^{(S)}) + \text{Var}(P^{(V)})}
 \end{equation}
-% 其中P^(S)是评委分数百分比，P^(V)是投票百分比。
-where $P^{(S)}$ and $P^{(V)}$ are the judges' score and vote percentages.
-% 观众有效权重为1-α。
-The effective audience weight is $1 - \alpha$.
-% 对于排名法，理论权重固定为0.5。
-For the Ranking Method, the theoretical weight is fixed at 0.5.
+% 其中P^(S)和P^(V)分别是评委分数百分比和投票百分比
+where $P^{(S)}$ and $P^{(V)}$ are the judge score and vote percentages.
 
 \subsection{Results}
 
-% 我们使用Task 1的投票估计结果，对34季301周数据进行反事实模拟分析。
-Using the vote estimates from Task~1, we conduct counterfactual simulation on
-301 weeks across all 34 seasons.
+% 使用Task 1的投票估计，对34季301周数据进行反事实分析
+Using the vote estimates from Task~1, we conduct counterfactual analysis on
+301 weeks across 34 seasons.
 
-% 表格总结了反事实分析的整体结果。
-Table~\ref{tab:counterfactual-summary} summarizes the counterfactual analysis results.
-
+% 反事实分析汇总表
 \begin{table}[htbp]
 \centering
 \caption{Counterfactual Analysis Summary}
-% 反事实分析汇总表
 \label{tab:counterfactual-summary}
 \begin{tabular}{lccc}
 \hline
-\textbf{Metric} & \textbf{Overall} & \textbf{Ranking} & \textbf{Percentage} \\
+\textbf{Metric} & \textbf{Overall} & \textbf{Ranking Era} & \textbf{Percentage Era} \\
 \hline
 % 分析周数
 Weeks analyzed & 301 & 74 & 227 \\
 % 淘汰翻转次数
-Elimination flips & 66 & 0 & 66 \\
-% 淘汰翻转率
-Elimination Flip Rate & 21.9\% & 0.0\% & 29.1\% \\
-% 平均Kendall's τ
-Mean Kendall's $\tau$ & 0.828 & 0.703 & 0.868 \\
-% 平均Spearman's ρ
-Mean Spearman's $\rho$ & 0.897 & 0.785 & 0.934 \\
+Elimination flips & 66 & 16 & 50 \\
+% 翻转率
+Flip Rate & 21.9\% & 21.6\% & 22.0\% \\
 \hline
 \end{tabular}
 \end{table}
 
-% 关键发现：排名法时期翻转率为0，百分比法时期约29%的周会产生不同淘汰结果。
-A striking finding is that all 66 elimination flips occurred during the
-Percentage Method era (Seasons 3--27).
-% 排名法时期（第1-2季和第28-34季）没有发生任何翻转。
-No flips occurred during the Ranking Method periods (Seasons 1--2 and 28--34).
-
-% 表格展示了两种方法下的有效权重分析结果。
-Table~\ref{tab:weight-decomposition} presents the effective weight analysis,
-which directly addresses the question of method bias.
-
+% 有效权重分析表
 \begin{table}[htbp]
 \centering
 \caption{Effective Weight Analysis}
-% 有效权重分析表
 \label{tab:weight-decomposition}
 \begin{tabular}{lcc}
 \hline
@@ -666,63 +604,23 @@ which directly addresses the question of method bias.
 Judge effective weight & 48.2\% & 22.9\% \\
 % 观众有效权重
 Audience effective weight & 51.8\% & 77.1\% \\
-% 观众权重>50%的周数占比
-Weeks with audience weight $>$50\% & $\sim$50\% & 93.4\% \\
 \hline
 \end{tabular}
 \end{table}
 
-% 权重分解回答了核心问题：哪种方法更偏向观众？
-The weight decomposition directly answers the core question: \textbf{which method
-favors fan votes more?}
-% 百分比法下观众有效权重平均达到77.1%，远高于排名法的51.8%。
-Under the Percentage Method, the effective audience weight averages 77.1\%,
-substantially exceeding the Ranking Method's 51.8\%.
-% 93.4%的周次中，百分比法给予观众超过50%的权重。
-In 93.4\% of weeks, the Percentage Method assigns more than half the effective
-weight to audience votes.
+% 有效权重分析表明：百分比法给予观众77.1%的有效权重，而排名法为51.8%
+The effective weight analysis reveals that the Percentage Method assigns 77.1\%
+effective weight to audience votes, compared to 51.8\% under the Ranking Method.
+% 原因：投票分布通常比评委分数更分散，导致投票主导百分比综合得分
+This occurs because vote distributions are typically more dispersed than judge
+scores, causing votes to dominate the combined percentage score.
 
-% 这个结论可能与直觉相反。
-This finding may seem counterintuitive.
-% 解释：百分比法的有效权重取决于分数分布的方差。
-The explanation lies in variance: the Percentage Method's effective weights
-depend on the dispersion of scores.
-% 当投票分布比评委分数更分散时，投票对综合得分的影响更大。
-When vote distributions are more dispersed than judge scores---as is typically
-the case with our estimates---votes dominate the combined score.
+% 结论：百分比法比排名法更偏向粉丝投票
+% 这解释了第3-27季的争议：低评委分数但高粉丝支持的选手能够晋级
+% 节目在第28季回归排名法，旨在恢复评委与观众之间的平衡
+\textbf{Conclusion}: The Percentage Method favors fan votes more than the Ranking
+Method. This explains the controversies during Seasons 3--27, where contestants
+with low judge scores but strong fan support could advance.
+The show's return to the Ranking Method in Season 28 aimed to restore balance.
 
-\subsection{Conclusion: The Percentage Method Favors Fan Votes}
-
-% 基于以上分析，我们得出明确结论：
-Based on our analysis, we reach a clear conclusion:
-
-% 百分比法更偏向观众投票。
-\textbf{The Percentage Method favors fan votes more than the Ranking Method.}
-
-% 证据如下：
-The evidence is threefold:
-\begin{enumerate}
-    % 证据1：有效权重
-    \item \textbf{Effective weights}: The Percentage Method assigns 77.1\% effective
-    weight to audience votes, compared to 51.8\% under the Ranking Method.
-    % 证据2：翻转模式
-    \item \textbf{Flip patterns}: All 66 elimination flips occurred during the
-    Percentage Method era, suggesting this method is more susceptible to vote
-    fluctuations overriding judge preferences.
-    % 证据3：争议案例
-    \item \textbf{Controversy cases}: Notable controversies (Bobby Bones in Season 27,
-    Bristol Palin in Season 11) all occurred during the Percentage Method era,
-    where high fan support could overcome low judge scores.
-\end{enumerate}
-
-% 这解释了为什么节目在第28季后回归排名法。
-This explains why the show returned to the Ranking Method starting in Season 28:
-% 制作方希望恢复评委与观众之间的平衡。
-producers sought to restore balance between judges and audience influence.
-
-% 这些发现将为Task 3的争议案例分析提供分析框架。
-These findings provide the analytical framework for examining specific
-controversy cases in Task~3.
-
-
-\end{document} 
+\end{document}
