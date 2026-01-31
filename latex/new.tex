@@ -35,35 +35,32 @@
 %    - 指标：翻盘率、隐含权重、Kendall相关
 %    - 结论：哪种方法更偏向评委/观众
 %
-% 7. Task 3: Controversy Analysis (争议案例分析) - 2.5页
+% 7. Task 3: Controversy Analysis + Method Recommendation (争议案例分析与方法推荐) - 4.5页
 %    - 案例：Jerry Rice, Billy Ray Cyrus, Bristol Palin, Bobby Bones
 %    - 方法：反事实分析
-%    - 结论：计分方法对争议的影响
-%
-% 8. Task 4: Method and Mechanism Discussion (方法与机制讨论) - 2页
-%    - 两种计分方法的优劣对比
 %    - Season 28+ 评委淘汰机制分析
+%    - 两种计分方法的优劣对比
 %    - 综合建议
 %
-% 9. Task 5: Feature Impact Analysis (特征影响分析) - 3页
+% 8. Task 4: Feature Impact Analysis (特征影响分析) - 3页
 %    - 舞伴效应（固定效应模型）
 %    - 选手特征（年龄、职业、地区）
 %    - 方法：混合效应回归 / 随机森林
 %
-% 10. Task 6: New Scoring System Design (新计分系统设计) - 3页
+% 9. Task 5: New Scoring System Design (新计分系统设计) - 3页
 %     - 设计目标：公平性、参与度、戏剧性、稳定性
 %     - 提议：动态加权混合法 + 进步奖励
 %     - 历史数据回测评估
 %
-% 11. Sensitivity Analysis (敏感性分析) - 1页
+% 10. Sensitivity Analysis (敏感性分析) - 1页
 %     - 投票估计的不确定性传播
 %     - 新系统参数敏感性
 %
-% 12. Strengths and Weaknesses (优缺点) - 0.5页
+% 11. Strengths and Weaknesses (优缺点) - 0.5页
 %
-% 13. Conclusions (结论) - 0.5页
+% 12. Conclusions (结论) - 0.5页
 %
-% 14. Memo to Producers (给制作人的备忘录) - 2页
+% 13. Memo to Producers (给制作人的备忘录) - 2页
 %     - 执行摘要
 %     - 关键发现
 %     - 具体建议
@@ -72,8 +69,8 @@
 % References (参考文献) - 1页
 %
 % 【页数汇总】
-%   摘要1 + 引言2 + 假设1 + 数据1.5 + T1(4) + T2(3) + T3(2.5) + T4(2)
-%   + T5(3) + T6(3) + 敏感性1 + 优缺点0.5 + 结论0.5 + 备忘录2 + 参考1 = 25页
+%   摘要1 + 引言2 + 假设1 + 数据1.5 + T1(4) + T2(3) + T3(4.5)
+%   + T4(3) + T5(3) + 敏感性1 + 优缺点0.5 + 结论0.5 + 备忘录2 + 参考1 = 25页
 %
 % ============================================================================
 
@@ -128,9 +125,9 @@
 % 结构建议：
 % 1. 问题背景（1-2句）
 % 2. Task 1 投票估计方法与结果
-% 3. Task 2-3 计分方法比较与争议分析
-% 4. Task 4-5 机制讨论与特征影响
-% 5. Task 6 新系统设计
+% 3. Task 2-3 计分方法比较与争议分析（含方法推荐）
+% 4. Task 4 特征影响
+% 5. Task 5 新系统设计
 % 6. 主要结论
 
 \vspace{5pt}
@@ -155,7 +152,7 @@
 
 \subsection{Problem Restatement}
 % TODO: 问题重述
-% - 6个子任务概述
+% - 5个子任务概述
 % - 核心挑战：投票数据不公开
 
 \subsection{Our Approach}
@@ -902,9 +899,9 @@ with low judge scores but strong fan support could advance.
 % The show's return to the Ranking Method in Season 28 aimed to restore balance. 
 
 % ----------------------------------------------------------------------------
-% 第6章：Task 3 - 争议案例分析
+% 第6章：Task 3 - 争议案例分析与方法推荐
 % ----------------------------------------------------------------------------
-\section{Task 3: Controversy Case Analysis}
+\section{Task 3: Controversy Analysis and Method Recommendation}
 
 % ============================================================================
 % 6.1 争议案例概述
@@ -1153,23 +1150,9 @@ already adopted in Seasons 28--34, addresses the structural issues that enabled
 controversial outcomes while preserving fan participation.
 
 % ----------------------------------------------------------------------------
-% 第7章：Task 4 - 方法与机制讨论
+% 第7章：Task 4 - 特征影响分析
 % ----------------------------------------------------------------------------
-\section{Task 4: Discussion on Methods and Mechanisms}
-
-\subsection{Pros and Cons of Each Method}
-% TODO: 各方法优缺点
-
-\subsection{Judge Elimination Mechanism}
-% TODO: 评委淘汰机制分析（Season 28+）
-
-\subsection{Recommendations}
-% TODO: 综合建议
-
-% ----------------------------------------------------------------------------
-% 第8章：Task 5 - 特征影响分析
-% ----------------------------------------------------------------------------
-\section{Task 5: Feature Impact Analysis}
+\section{Task 4: Feature Impact Analysis}
 
 \subsection{Professional Partner Effect}
 % TODO: 舞伴效应
@@ -1188,9 +1171,9 @@ controversial outcomes while preserving fan participation.
 % - 特征重要性
 
 % ----------------------------------------------------------------------------
-% 第9章：Task 6 - 新计分系统设计
+% 第8章：Task 5 - 新计分系统设计
 % ----------------------------------------------------------------------------
-\section{Task 6: New Scoring System Design}
+\section{Task 5: New Scoring System Design}
 
 \subsection{Design Objectives}
 % TODO: 设计目标
@@ -1213,7 +1196,7 @@ controversial outcomes while preserving fan participation.
 % TODO: 建议
 
 % ----------------------------------------------------------------------------
-% 第10章：敏感性分析
+% 第9章：敏感性分析
 % ----------------------------------------------------------------------------
 \section{Sensitivity Analysis}
 \label{sec:sensitivity}
@@ -1271,7 +1254,7 @@ Our results indicate that all four hyperparameters exhibit high to medium stabil
 confirming that the model is robust to reasonable parameter variations.
 
 % ----------------------------------------------------------------------------
-% 第11章：模型验证
+% 第10章：模型验证
 % ----------------------------------------------------------------------------
 \section{Model Validation}
 
@@ -1280,7 +1263,7 @@ confirming that the model is robust to reasonable parameter variations.
 % - 留一季验证
 
 % ----------------------------------------------------------------------------
-% 第12章：优缺点
+% 第11章：优缺点
 % ----------------------------------------------------------------------------
 \section{Strengths and Weaknesses}
 
@@ -1291,7 +1274,7 @@ confirming that the model is robust to reasonable parameter variations.
 % TODO: 缺点
 
 % ----------------------------------------------------------------------------
-% 第13章：结论
+% 第12章：结论
 % ----------------------------------------------------------------------------
 \section{Conclusions}
 
