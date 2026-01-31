@@ -627,5 +627,256 @@ Method. This explains the controversies during Seasons 3--27, where contestants
 with low judge scores but strong fan support could advance.
 
 % The show's return to the Ranking Method in Season 28 aimed to restore balance. 
-    
+   
+% ----------------------------------------------------------------------------
+% 第6章：Task 3 - 争议案例分析
+% ----------------------------------------------------------------------------
+\section{Task 3: Controversy Case Analysis}
+
+% ============================================================================
+% 6.1 争议案例概述
+% ============================================================================
+
+\subsection{Overview of Controversial Cases}
+
+% 在《与星共舞》34季历史中，某些选手因评委评分与粉丝投票之间的巨大差异而引发重大争议。
+% 我们分析四个典型案例，它们体现了技术评估与大众支持之间的张力。
+Throughout the 34-season history of \textit{Dancing with the Stars}, certain contestants
+have sparked significant controversy due to stark discrepancies between judges' assessments
+and fan voting patterns. We examine four prominent cases that exemplify the tension between
+technical evaluation and popular support.
+
+% 争议案例汇总表
+\begin{table}[htbp]
+\centering
+\caption{Summary of Controversial Cases}
+\label{tab:controversy-cases}
+\begin{tabular}{lccccc}
+\hline
+\textbf{Contestant} & \textbf{Season} & \textbf{Method} & \textbf{Placement} & \textbf{Judge Last} & \textbf{Saved by Fans} \\
+\hline
+Jerry Rice & 2 & Ranking & 2nd & 1 & 1 \\
+Billy Ray Cyrus & 4 & Percentage & 5th & 3 & 2 \\
+Bristol Palin & 11 & Percentage & 3rd & 4 & 4 \\
+Bobby Bones & 27 & Percentage & \textbf{1st} & 1 & 1 \\
+\hline
+\end{tabular}
+\end{table}
+
+% 我们使用 Task 1-2 中建立的符号定义以下争议度指标：
+We define the following controversy metrics using the notation established in Tasks 1--2:
+\begin{itemize}
+    % 评委最低次数：被评委评为最低分的周数
+    \item \textbf{Times Judge Last}: Number of weeks where $R_i^S = n$ (ranked last by judges)
+    % 被粉丝救回次数：评委最低但未被淘汰的周数
+    \item \textbf{Times Saved by Fans}: Weeks where $R_i^S = n$ but $E \neq i$
+    % 争议强度：平均评委排名与平均投票排名之差（正值表示粉丝比评委更喜欢该选手）
+    \item \textbf{Controversy Intensity}: $\overline{R_i^S} - \overline{R_i^\pi}$
+    (positive values indicate fans favor the contestant more than judges)
+\end{itemize}
+
+% 争议度指标详细表
+\begin{table}[htbp]
+\centering
+\caption{Controversy Metrics by Contestant}
+\label{tab:controversy-metrics}
+\begin{tabular}{lcccccc}
+\hline
+\textbf{Contestant} & \textbf{Weeks} & \textbf{Avg $R^S$} & \textbf{Avg $R^\pi$} & \textbf{Intensity} & \textbf{Best $R^S$} & \textbf{Worst $R^S$} \\
+\hline
+Jerry Rice & 7 & 4.93 & 3.71 & 1.21 & 4 & 7 \\
+Billy Ray Cyrus & 8 & 6.88 & 4.00 & 2.88 & 5 & 11 \\
+Bristol Palin & 9 & 6.33 & 5.89 & 0.44 & 3 & 9 \\
+Bobby Bones & 8 & 7.62 & 7.25 & 0.38 & 6 & 10 \\
+\hline
+\end{tabular}
+\end{table}
+
+% Billy Ray Cyrus 的争议强度最高(2.88)，表明评委与粉丝排名差距最大。
+% 值得注意的是，尽管 Bobby Bones 争议强度较低(0.38)，但他以持续低评委分夺冠引发了最多公众讨论。
+The controversy intensity is highest for Billy Ray Cyrus (2.88), indicating the largest gap
+between judge and fan rankings. Notably, while Bobby Bones has a modest controversy intensity
+(0.38), his \textbf{winning the championship} despite consistently low judge scores generated
+the most public discourse.
+
+% ============================================================================
+% 6.2 逐案分析
+% ============================================================================
+
+\subsection{Case-by-Case Analysis}
+
+% --- Jerry Rice (Season 2) ---
+\subsubsection{Jerry Rice (Season 2)}
+
+% Jerry Rice，NFL传奇球星，在排名法下参赛并获得亚军，尽管平均评委排名 $R^S = 4.93$（位于后半段）。
+% 在百分比法下，他的淘汰顺序将保持不变（0周改变）。
+% 他两次进入底部两人；评委机制会淘汰他一次，但那周他本来就被淘汰了。
+Jerry Rice, the NFL legend, competed under the Ranking Method and finished as runner-up
+despite averaging $R^S = 4.93$ (bottom half). Under the Percentage Method, his elimination
+sequence would remain unchanged (0 weeks altered). He appeared in the bottom-two twice;
+the judge mechanism would have eliminated him once, but only in the week he was actually
+eliminated anyway.
+
+% --- Billy Ray Cyrus (Season 4) ---
+\subsubsection{Billy Ray Cyrus (Season 4)}
+
+% Billy Ray Cyrus，乡村音乐巨星，在百分比法下参赛并获得第5名，争议强度(2.88)在四个案例中最高。
+% 在排名法下，8周中有4周会产生不同的淘汰者，但他仍会在第8周被淘汰。
+% 他3次进入底部两人；评委机制会在所有3次中淘汰他，大幅缩短他的比赛历程。
+Billy Ray Cyrus, the country music star, competed under the Percentage Method and finished 5th
+with the highest controversy intensity (2.88) among the four cases. Under the Ranking Method,
+4 of 8 weeks would have different eliminees, but he would still exit in Week 8. He appeared in
+the bottom-two 3 times; the judge mechanism would have eliminated him in all 3 instances,
+significantly shortening his run.
+
+% --- Bristol Palin (Season 11) ---
+\subsubsection{Bristol Palin (Season 11)}
+
+% Bristol Palin，前州长 Sarah Palin 之女，在百分比法下参赛，尽管4次被评委评为最低分仍获得第3名。
+% 在排名法下，她会在第5周被淘汰（而非 Florence Henderson），最终第8名而非第3名。
+% 她在9周中有7周进入底部两人；评委机制会在其中4次淘汰她——这是所有案例中影响最严重的。
+Bristol Palin, daughter of former Governor Sarah Palin, competed under the Percentage Method
+and finished 3rd despite ranking last among judges 4 times. Under the Ranking Method, she would
+have been eliminated in Week 5 instead of Florence Henderson, finishing 8th rather than 3rd.
+She appeared in the bottom-two 7 out of 9 weeks; the judge mechanism would have eliminated her
+in 4 of those instances---the most severe impact among all cases.
+
+% --- Bobby Bones (Season 27) ---
+\subsubsection{Bobby Bones (Season 27)}
+
+% Bobby Bones，乡村音乐电台主持人，在百分比法下赢得第27季冠军，尽管平均评委排名 $R^S = 7.62$（四个案例中最差）。
+% 在排名法下，他会在第5周或第8周被淘汰，无法夺冠。
+% 他3次进入底部两人；评委机制会淘汰他一次（第8周）。节目在第28季恢复使用排名法。
+Bobby Bones, a country music radio host, won Season 27 under the Percentage Method despite
+averaging $R^S = 7.62$ (the worst among our cases). Under the Ranking Method, he would have
+been eliminated in Week 5 or Week 8, making his championship impossible. He appeared in the
+bottom-two 3 times; the judge mechanism would have eliminated him once (Week 8). The show
+returned to the Ranking Method in Season 28.
+
+% ============================================================================
+% 6.3 反事实分析汇总
+% ============================================================================
+
+\subsection{Counterfactual Summary}
+
+% 反事实分析汇总表：各选手在替代方法下的结果变化
+\begin{table}[htbp]
+\centering
+\small
+\caption{Counterfactual Analysis: Would Switching Methods Change Outcomes?}
+\label{tab:counterfactual-controversy}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Contestant} & \textbf{Actual Method} & \textbf{CF Elim.} & \textbf{Weeks Changed} & \textbf{Impact} \\
+\hline
+Jerry Rice & Ranking & 0 & 0 & None \\
+Billy Ray Cyrus & Percentage & 1 (wk 8) & 4 & Same elim. week \\
+Bristol Palin & Percentage & 1 (wk 5) & 2 & Elim. 4 wks earlier \\
+Bobby Bones & Percentage & 2 (wk 5, 8) & 3 & \textbf{Would not win} \\
+\hline
+\end{tabular}
+\end{table}
+
+% 回答核心问题：选择不同的计分方法是否会导致相同结果？
+\textbf{Would the choice of method have led to the same result?}
+\begin{itemize}
+    % Jerry Rice：是的，两种方法会产生相同的淘汰顺序。
+    \item \textbf{Jerry Rice}: Yes. Both methods would yield the same elimination sequence.
+    % Billy Ray Cyrus：部分相同。他仍会在第8周被淘汰，但过程不同。
+    \item \textbf{Billy Ray Cyrus}: Partially. He would still be eliminated in Week 8, but
+    the path there would differ.
+    % Bristol Palin：不同。在排名法下她会在第5周被淘汰，最终第8名而非第3名。
+    \item \textbf{Bristol Palin}: No. She would have been eliminated in Week 5 under the
+    Ranking Method, finishing 8th instead of 3rd.
+    % Bobby Bones：不同。在排名法下他会在第5周或第8周被淘汰，无法夺冠。
+    \item \textbf{Bobby Bones}: No. He would have been eliminated in Week 5 or Week 8 under
+    the Ranking Method, making his championship victory impossible.
+\end{itemize}
+
+% ============================================================================
+% 6.4 评委淘汰机制的影响
+% ============================================================================
+
+\subsection{Impact of Judge Elimination Mechanism}
+
+% 从第28季开始，DWTS 引入评委淘汰机制：在综合分数和投票后，评委从底部两人中选择淘汰一人。
+% 我们模拟该机制对争议案例的影响。
+Starting from Season 28, DWTS introduced a judge elimination mechanism where, after
+combining scores and votes, judges choose which of the bottom-two contestants to eliminate.
+We simulate this mechanism's impact on our controversial cases.
+
+% 假设：当面对两位选手时，评委会淘汰当周评委分数较低的那位。
+\textbf{Assumption}: When presented with two contestants, judges would eliminate the one
+with the lower judge score that week.
+
+% 评委淘汰机制影响汇总表
+\begin{table}[htbp]
+\centering
+\caption{Judge Elimination Mechanism Impact}
+\label{tab:judge-mechanism}
+\begin{tabular}{lccc}
+\hline
+\textbf{Contestant} & \textbf{In Bottom-Two} & \textbf{Would Be Eliminated} & \textbf{Impact Assessment} \\
+\hline
+Jerry Rice & 2 times & 1 time & Moderate \\
+Billy Ray Cyrus & 3 times & 3 times & \textbf{Severe} \\
+Bristol Palin & 7 times & 4 times & \textbf{Severe} \\
+Bobby Bones & 3 times & 1 time & Moderate \\
+\hline
+\end{tabular}
+\end{table}
+
+% Billy Ray Cyrus 和 Bristol Palin 会受到严重影响：Cyrus 在3次底部两人中都会被淘汰，Palin 在7次中会被淘汰4次。
+% Bobby Bones 和 Jerry Rice 受到中等影响（各被淘汰一次）。
+% 该机制作为有效的制衡措施，在不压制粉丝参与的情况下恢复专家影响力。
+Billy Ray Cyrus and Bristol Palin would have been substantially affected: Cyrus would have been
+eliminated in all 3 bottom-two appearances, while Palin would have been eliminated in 4 of 7.
+Bobby Bones and Jerry Rice face moderate impact (eliminated once each). The mechanism serves
+as an effective balancing measure that restores expert influence without overriding fan engagement.
+
+% ============================================================================
+% 6.5 综合建议
+% ============================================================================
+
+\subsection{Recommendations and Synthesis}
+
+% 基于争议分析，我们推荐排名法结合评委淘汰机制。
+Based on the controversy analysis, we recommend the \textbf{Ranking Method} combined with
+the \textbf{Judge Elimination Mechanism}.
+
+% 计分方法公平性对比表
+\begin{table}[htbp]
+\centering
+\caption{Comparison of Scoring Methods for Fairness}
+\label{tab:method-fairness}
+\begin{tabular}{lcc}
+\hline
+\textbf{Criterion} & \textbf{Ranking Method} & \textbf{Percentage Method} \\
+\hline
+Weight Stability & Fixed 50\%--50\% & Dynamic (22.9\%--77.1\%) \\
+Predictability & High & Low \\
+Expert Influence & Protected & Can be overridden \\
+Major Controversies & 0 (S1--2, S28--34) & 3+ (S3--27) \\
+Transparency & Simple rules & Complex score-dependent \\
+\hline
+\end{tabular}
+\end{table}
+
+% 排名法保证评委与粉丝之间的平等影响力(50%-50%)，不受分数分布影响。
+% 使用该方法的季度(1-2和28-34)没有发生重大争议，而百分比法时代(3-27)产生了多个争议结果，包括 Bobby Bones 的夺冠。
+The Ranking Method guarantees equal influence (50\%--50\%) between judges and fans,
+regardless of score distributions. Seasons using this method (1--2 and 28--34) experienced
+no major controversies, while the Percentage Method era (3--27) produced multiple disputed
+outcomes including Bobby Bones's championship victory.
+
+% 第28季引入的评委淘汰机制提供额外保障：当选手进入底部两人时，由评委做最终决定。
+% 这会对4个争议案例中的2个(Billy Ray Cyrus 和 Bristol Palin)产生重大影响，同时保留粉丝对大多数淘汰的影响力。
+% 这一组合（已在第28-34季采用）解决了导致争议结果的结构性问题，同时保留粉丝参与。
+The Judge Elimination Mechanism, introduced in Season 28, provides an additional safeguard:
+when contestants are placed in the bottom two, judges make the final decision. This would
+have substantially impacted 2 of 4 controversy cases (Billy Ray Cyrus and Bristol Palin)
+while maintaining fan influence for the majority of eliminations. This combination,
+already adopted in Seasons 28--34, addresses the structural issues that enabled
+controversial outcomes while preserving fan participation.
+
 \end{document}
